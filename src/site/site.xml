@@ -1,43 +1,38 @@
-<?xml version="1.0"?>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd"
+  name="${project.name}">
 
-<project name="Jackcess Encrypt">
-  <skin>
-    <groupId>org.apache.maven.skins</groupId>
-    <artifactId>maven-fluido-skin</artifactId>
-    <version>1.6</version>
-  </skin>
-  <bannerLeft>
-    <name>${project.name}</name>
-  </bannerLeft>
-  <body>
-    <menu name="Jackcess Encrypt">
-      <item name="About" href="index.html"/>
-      <item name="Downloads" href="https://sourceforge.net/projects/jackcessencrypt/files/"/>
-      <item name="SourceForge Project" href="https://sourceforge.net/projects/jackcessencrypt/"/>
-      <item name="Support" href="https://sourceforge.net/projects/jackcessencrypt/support"/>
-      <item name="Jackcess" href="https://jackcess.sourceforge.io/"/>
-      <item name="Upgrading to Jackcess Encrypt 4.x" href="jackcess-4.html"/>
-      <item name="Upgrading to Older Versions" href="jackcess_upgrades.html" collapse="true">
-        <item name="Jackcess Encrypt 3.x" href="jackcess-3.html"/>
-        <item name="Jackcess Encrypt 2.x" href="jackcess-2.html"/>
-      </item>
-      <item name="GitHub Mirror" href="https://github.com/jahlborn/jackcessencrypt"/>
-    </menu>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>${dep.plugin.maven-fluido-skin.version}</version>
+    </skin>
 
-    <menu ref="reports"/>
+    <bannerLeft name="${project.name}"/>
 
-  </body>
-  
-  <custom>
-    <fluidoSkin>
-      <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
-      <copyrightClass>center</copyrightClass>
-      <gitHub>
-        <projectId>jahlborn/jackcessencrypt</projectId>
-        <ribbonOrientation>right</ribbonOrientation>
-        <ribbonColor>gray</ribbonColor>        
-      </gitHub>
-    </fluidoSkin>
-  </custom>
+    <custom>
+        <fluidoSkin/>
+    </custom>
 
-</project>
+    <version position="left"/>
+    <publishDate position="right"/>
+
+    <body>
+
+        <breadcrumbs/>
+
+        <links>
+            <item name="About ${project.name}" href="index.html" />
+            <item name="${project.name} (Github)" href="${project.url}" target="_blank"/>
+            <item name="Jackcess (Github)" href="${githubBaseUrl}jackcess/" target="_blank"/>
+            <item name="UCanAccess (Github)" href="${githubBaseUrl}ucanaccess" target="_blank"/>
+            <item name="Maven Central" href="https://central.sonatype.com/artifact/${project.groupId}/${project.artifactId}/" target="_blank"/>
+            <item name="Legacy project (SourceForge)" href="https://sourceforge.net/projects/jackcessencrypt/" target="_blank"/>
+        </links>
+
+        <menu ref="reports"/>
+        <menu ref="modules"/>
+
+    </body>
+
+</site>

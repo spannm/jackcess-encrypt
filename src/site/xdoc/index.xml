@@ -2,41 +2,61 @@
 
 <document>
   <properties>
-    <author email="jahlborn@users.sf.net">James Ahlborn</author>
     <title>Java Library for MS Access Encryption (Jackcess extension)</title>
   </properties>
   <body>
 
     <section name="Jackcess Encrypt">
       <p>
-        Jackcess Encrypt is an extension library for the <a href="https://jackcess.sourceforge.io/">Jackcess</a> project
+        Jackcess Encrypt is an extension library for the <a href="https://github.com/spannm/jackcess/">Jackcess</a> project
         which implements support for some forms of Microsoft Access and
         Microsoft Money encryption.  Jackcess Encrypt is licensed under the
-        <a href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License</a> (as of version 2.1.0).
+        <a href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache License</a>.
       </p>
       <p>
         This project is separate from the main Jackcess project for two main
         reasons:
         <ul>
-          <li>The encryption support requires an additional library (<a href="http://www.bouncycastle.org/java.html">Bouncy Castle</a>).
+          <li>The encryption support requires an the (<a href="http://www.bouncycastle.org/">Bouncy Castle</a>) library.
               Making this support separate from the main Jackcess library
-              allows users to avoid including unnecessary libraries.</li>
+              allows users to avoid including unnecessary libraries.
+          </li>
               <ul>
-                <li>Bouncy Castle Compatability - the Bouncy Castle library
+                <li>Bouncy Castle Compatibility - the Bouncy Castle library
                     made a binary incompatible change in version 1.51.
                     Versions of Jackcess Encrypt 2.1.0 and earlier are only
                     compatible with Bouncy Castle 1.50 and earlier.  Jackcess
                     Encrypt 2.1.1 updated to Bouncy Castle 1.52, but added a
-                    shim layer which maintains compability with earlier
-                    versions of Bouncy Castle as well (see <a href="https://sourceforge.net/p/jackcessencrypt/feature-requests/2/">Feature
-                    Request 2</a> for more details).</li>
+                    slim layer which maintains compatibility with earlier
+                    versions of Bouncy Castle as well.
+                </li>
               </ul>
           <li>Sourceforge previously had restrictions on the distribution of
               software which used encryption.  Keeping this support in a
               separate project allowed the main Jackcess library to be
-              distributed more freely.</li>
+              distributed more freely.
+          </li>
         </ul>
       </p>
+
+      <subsection name="Fork, Java 11, new Maven coordinates (2025-02-16)">
+        <p>
+          To work with the modern forked version of <a href="https://github.com/spannm/jackcess/">Jackcess</a>,
+          the library was forked, refactored, its dependencies and build definition modernized.
+        </p>
+        <p>
+          The codebase was moved to package: <code>io.github.spannm.jackcess.encrypt</code>
+        </p>
+        <p>
+          The automatic module name is now: <code>io.github.spannm.jackcess.encrypt</code>
+        </p>
+        <p>
+          The project requires Java 11 or later to build as well as to use.
+        </p>
+        <p>
+          The Maven coordinates are: <code>io.github.spannm:jackcess-encrypt</code>.
+        </p>
+      </subsection>
 
       <subsection name="Java 9+ Compatibility (2021-01-20)">
         <p>

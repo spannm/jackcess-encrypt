@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.basepom</groupId>
         <artifactId>basepom-oss</artifactId>
-        <version>62</version>
+        <version>63</version>
     </parent>
 
     <groupId>io.github.spannm</groupId>
@@ -94,12 +94,12 @@
         <githubBaseUrl>https://github.com/${developerId}/</githubBaseUrl>
 
         <dep.jackcess.version>5.1.0</dep.jackcess.version>
-        <dep.bcprov-jdk18on.version>1.80</dep.bcprov-jdk18on.version>
+        <dep.bcprov-jdk18on.version>1.81</dep.bcprov-jdk18on.version>
 
-        <dep.slf4j.version>2.0.16</dep.slf4j.version>
+        <dep.slf4j.version>2.0.17</dep.slf4j.version>
 
         <!-- test dependencies -->
-        <dep.junit.version>5.12.0</dep.junit.version>
+        <dep.junit.version>5.13.0</dep.junit.version>
 
         <!-- override basepom versions -->
         <dep.checkstyle.version>10.23.1</dep.checkstyle.version>

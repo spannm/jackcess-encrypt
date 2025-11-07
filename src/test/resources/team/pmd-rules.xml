@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="UCanAccess PMD rules"
+<ruleset name="Jackcess PMD rules"
     xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
@@ -37,7 +37,7 @@
     <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions">
         <properties>
             <property name="methodParameterPattern" value="_?[a-z][a-zA-Z0-9]*" />
-            <property name="finalMethodParameterPattern" value="_[a-z][a-zA-Z0-9]*" />
+            <property name="finalMethodParameterPattern" value="_?[a-z][a-zA-Z0-9]*" />
             <property name="lambdaParameterPattern" value="[a-z][a-zA-Z0-9]*" />
             <property name="explicitLambdaParameterPattern" value="[a-z][a-zA-Z0-9]*" />
         </properties>
@@ -93,7 +93,6 @@
     <rule ref="category/java/errorprone.xml/UnconditionalIfStatement" />
     <rule ref="category/java/errorprone.xml/UnnecessaryConversionTemporary" />
     <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
-    <rule ref="category/java/errorprone.xml/UselessOperationOnImmutable" />
 
     <rule ref="category/java/multithreading.xml/AvoidThreadGroup" />
     <rule ref="category/java/multithreading.xml/DontCallThreadRun" />

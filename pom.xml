@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.basepom</groupId>
         <artifactId>basepom-oss</artifactId>
-        <version>66</version>
+        <version>67</version>
     </parent>
 
     <groupId>io.github.spannm</groupId>
@@ -106,8 +106,6 @@
         <!-- test dependencies -->
         <dep.junit.version>5.14.1</dep.junit.version>
 
-        <!-- downgrade site plugin to work with site skin -->
-        <dep.plugin.site.version>3.21.0</dep.plugin.site.version>
         <dep.plugin.maven-fluido-skin.version>2.1.0</dep.plugin.maven-fluido-skin.version>
 
         <!-- additional plugins not defined in parent -->
@@ -121,7 +119,7 @@
         <dep.checkstyle.version>10.26.1</dep.checkstyle.version>
         <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
         <basepom.check.skip-license>true</basepom.check.skip-license>
-        <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
+        <basepom.check.skip-dependency>false</basepom.check.skip-dependency>
         <basepom.check.fail-dependency>false</basepom.check.fail-dependency>
 
         <basepom.javadoc.skip>false</basepom.javadoc.skip>

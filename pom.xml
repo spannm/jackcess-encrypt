@@ -97,7 +97,7 @@
         <developerId>spannm</developerId>
         <githubBaseUrl>https://github.com/${developerId}/</githubBaseUrl>
 
-        <dep.jackcess.version>5.1.1</dep.jackcess.version>
+        <dep.jackcess.version>5.1.2</dep.jackcess.version>
         <dep.bcprov-jdk18on.version>1.83</dep.bcprov-jdk18on.version>
 
         <dep.slf4j.version>2.0.17</dep.slf4j.version>

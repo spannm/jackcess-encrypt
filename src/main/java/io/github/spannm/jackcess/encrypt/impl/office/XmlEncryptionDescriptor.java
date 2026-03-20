@@ -131,7 +131,7 @@ public final class XmlEncryptionDescriptor {
         String origStr = _str;
         // massage the enum str a bit to be a valid enum
         _str = _str.trim().toUpperCase().replaceAll("[-_]", "");
-        if ((_str.length() > 0) && Character.isDigit(_str.charAt(0))) {
+        if ((!_str.isEmpty()) && Character.isDigit(_str.charAt(0))) {
             _str = '_' + _str;
         }
         try {

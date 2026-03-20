@@ -11,10 +11,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringReader;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -38,12 +36,7 @@ public final class XmlEncryptionParser {
     private static final Base64.Decoder B64_DEC                  = Base64.getDecoder();
 
     private static final EntityResolver IGNORING_ENTITY_RESOLVER =
-        new EntityResolver() {
-            @Override
-            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-                return new InputSource(new StringReader(""));
-            }
-        };
+            (publicId, systemId) -> new InputSource(new StringReader(""));
 
     private XmlEncryptionParser() {
     }

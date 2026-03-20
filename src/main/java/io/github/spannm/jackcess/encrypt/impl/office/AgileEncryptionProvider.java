@@ -12,7 +12,6 @@ import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -26,7 +25,7 @@ public class AgileEncryptionProvider extends BlockCipherProvider {
     private final CTPasswordKeyEncryptor pwdKeyEnc;
     private final byte[]                 keyValue;
 
-    public AgileEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) throws IOException {
+    public AgileEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) {
         super(_channel, _encodingKey);
 
         // OC: 2.3.4.10

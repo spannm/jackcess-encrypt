@@ -241,7 +241,7 @@ public class EncryptionHeader {
             // Base provider default. otherwise, use the Strong provider default.
             // CSPs: http://msdn.microsoft.com/en-us/library/windows/desktop/bb931357%28v=vs.85%29.aspx
             _cspName = _cspName.trim().toLowerCase();
-            return _cspName.length() == 0 || _cspName.contains(CSP_BASE_STRING) ? RC4_BASE_DEFAULT_KEY_SIZE : RC4_STRONG_DEFAULT_KEY_SIZE;
+            return _cspName.isEmpty() || _cspName.contains(CSP_BASE_STRING) ? RC4_BASE_DEFAULT_KEY_SIZE : RC4_STRONG_DEFAULT_KEY_SIZE;
         }
 
         // for all other algorithms, use min key size

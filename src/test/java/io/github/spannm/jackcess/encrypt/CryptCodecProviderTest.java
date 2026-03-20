@@ -160,12 +160,9 @@ class CryptCodecProviderTest extends AbstractBaseTest {
     @Test
     void testPasswordCallback() throws Exception {
         AtomicInteger count = new AtomicInteger();
-        PasswordCallback pc = new PasswordCallback() {
-            @Override
-            public String getPassword() {
-                count.incrementAndGet();
-                return "Test123";
-            }
+        PasswordCallback pc = () -> {
+            count.incrementAndGet();
+            return "Test123";
         };
 
         Database db = new DatabaseBuilder()

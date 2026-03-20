@@ -21,7 +21,7 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
 
     protected enum Phase {
         PWD_VERIFY,
-        CRYPT;
+        CRYPT
     }
 
     private Digest     digest;

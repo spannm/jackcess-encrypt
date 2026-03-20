@@ -32,7 +32,7 @@ public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
         this(_channel, _encodingKey, _encProvBuf, _password, HASH_ITERATIONS);
     }
 
-    protected ECMAStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password, int _hashIterations) throws IOException {
+    protected ECMAStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password, int _hashIterations) {
         super(_channel, _encodingKey);
 
         hashIterations = _hashIterations;

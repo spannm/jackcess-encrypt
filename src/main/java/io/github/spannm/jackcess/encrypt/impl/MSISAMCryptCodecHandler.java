@@ -50,7 +50,7 @@ public class MSISAMCryptCodecHandler extends BaseJetCryptCodecHandler {
 
     private final byte[]     baseHash;
 
-    MSISAMCryptCodecHandler(PageChannel _channel, String _password, Charset _charset, ByteBuffer _buffer) throws IOException {
+    MSISAMCryptCodecHandler(PageChannel _channel, String _password, Charset _charset, ByteBuffer _buffer) {
         super(_channel, null);
 
         byte[] salt = ByteUtil.getBytes(_buffer, SALT_OFFSET, 8);
@@ -119,8 +119,7 @@ public class MSISAMCryptCodecHandler extends BaseJetCryptCodecHandler {
         }
 
         // Get digest value
-        byte[] digestBytes = hash(digest, passwordBytes, PASSWORD_DIGEST_LENGTH);
-        return digestBytes;
+        return hash(digest, passwordBytes, PASSWORD_DIGEST_LENGTH);
     }
 
     private static byte[] getOldDecryptionKey(ByteBuffer _buffer, JetFormat _format) {

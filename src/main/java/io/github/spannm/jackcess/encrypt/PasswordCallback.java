@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * demand, at the time it is required.  The callback will only be invoked if
  * it is determined that a file <i>actually</i> requires a password to be
  * opened.  This could be used to implement a password user prompt utility.
- *
+ * <p>
  * Note, CryptCodecProvider now accepts a {@link Supplier} as the password
  * callback, so this interface is no longer necessary (kept for historical
  * compatibility).

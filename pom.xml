@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.basepom</groupId>
         <artifactId>basepom-oss</artifactId>
-        <version>67</version>
+        <version>68</version>
     </parent>
 
     <groupId>io.github.spannm</groupId>
@@ -59,7 +59,7 @@
         <connection>scm:git:ssh//git@github.com/${developerId}/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/${developerId}/${project.artifactId}.git</developerConnection>
         <url>https://github.com/${developerId}/${project.artifactId}/tree/master</url>
-        <tag></tag>
+        <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
@@ -103,14 +103,18 @@
         <dep.slf4j.version>2.0.17</dep.slf4j.version>
 
         <!-- test dependencies -->
-        <dep.junit.version>5.14.2</dep.junit.version>
+        <dep.junit.version>5.14.3</dep.junit.version>
 
         <dep.plugin.maven-fluido-skin.version>2.1.0</dep.plugin.maven-fluido-skin.version>
 
         <!-- additional plugins not defined in parent -->
         <dep.plugin.sortpom.version>4.0.0</dep.plugin.sortpom.version>
+        <dep.plugin.versions.version>2.21.0</dep.plugin.versions.version>
 
         <basepom.deploy.snapshot.url>https://central.sonatype.com/repository/maven-snapshots/</basepom.deploy.snapshot.url>
+
+        <!-- the current "minimal" version of maven -->
+        <basepom.maven.version>3.9.0</basepom.maven.version>
 
         <basepom.check.skip-checkstyle>false</basepom.check.skip-checkstyle>
         <basepom.check.skip-pmd>false</basepom.check.skip-pmd>
@@ -208,6 +212,7 @@
             <plugins>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <compilerArgument>-Xlint:all</compilerArgument>
@@ -238,6 +243,7 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <configuration>
                         <configLocation>src/test/resources/team/checkstyle-rules.xml</configLocation>
@@ -385,6 +391,22 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${dep.plugin.versions.version}</version>
+                <configuration>
+                    <ruleSet>
+                        <ignoreVersions>
+                            <ignoreVersion>
+                                <type>regex</type>
+                                <version>.*(?i)(alpha|beta|rc|cr|preview|milestone|[mb][0-9]+).*</version>
+                            </ignoreVersion>
+                        </ignoreVersions>
+                    </ruleSet>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>
@@ -393,7 +415,7 @@
 
         <profile>
             <id>fast</id>
-            <!-- Profile to skip time-consuming steps. -->
+            <!-- profile to skip time-consuming steps -->
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

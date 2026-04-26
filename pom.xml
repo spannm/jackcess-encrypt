@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.basepom</groupId>
         <artifactId>basepom-oss</artifactId>
-        <version>68</version>
+        <version>69</version>
     </parent>
 
     <groupId>io.github.spannm</groupId>
@@ -60,7 +60,7 @@
         <developerConnection>scm:git:ssh://git@github.com/${developerId}/${project.artifactId}.git</developerConnection>
         <url>https://github.com/${developerId}/${project.artifactId}/tree/master</url>
         <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <issueManagement>
         <system>Github</system>
@@ -97,8 +97,8 @@
         <developerId>spannm</developerId>
         <githubBaseUrl>https://github.com/${developerId}/</githubBaseUrl>
 
-        <dep.jackcess.version>5.1.3</dep.jackcess.version>  
-        <dep.bcprov-jdk18on.version>1.83</dep.bcprov-jdk18on.version>
+        <dep.jackcess.version>5.1.3</dep.jackcess.version>
+        <dep.bcprov-jdk18on.version>1.84</dep.bcprov-jdk18on.version>
 
         <dep.slf4j.version>2.0.17</dep.slf4j.version>
 

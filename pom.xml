@@ -98,7 +98,7 @@
 
         <module.name>${project.groupId}.jackcess.encrypt</module.name>
 
-        <dep.jackcess.version>5.1.4</dep.jackcess.version>
+        <dep.jackcess.version>5.1.5</dep.jackcess.version>
         <dep.bcprov-jdk18on.version>1.84</dep.bcprov-jdk18on.version>
 
         <dep.slf4j.version>2.0.18</dep.slf4j.version>
@@ -280,6 +280,30 @@
                         <createBackupFile>false</createBackupFile>
                         <expandEmptyElements>false</expandEmptyElements>
                         <nrOfIndentSpace>4</nrOfIndentSpace>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <!-- CycloneDX Maven Plugin
+                         https://cyclonedx.github.io/cyclonedx-maven-plugin -->
+                    <groupId>org.cyclonedx</groupId>
+                    <artifactId>cyclonedx-maven-plugin</artifactId>
+                    <version>${dep.plugin.cyclonedx.version}</version>
+                    <executions>
+                        <execution>
+                            <id>cyclonedx-makebom</id>
+                            <goals>
+                                <goal>makeBom</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <projectType>library</projectType>
+                        <skipNotDeployed>false</skipNotDeployed>
+                        <outputFormat>xml</outputFormat>
+                        <outputName>sbom</outputName>
+                        <verbose>false</verbose>
                     </configuration>
                 </plugin>
 

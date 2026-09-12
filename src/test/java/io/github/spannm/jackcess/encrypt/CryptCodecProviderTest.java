@@ -1,6 +1,10 @@
 package io.github.spannm.jackcess.encrypt;
 
-import static io.github.spannm.jackcess.test.TestUtil.*;
+import static io.github.spannm.jackcess.test.TestUtil.assertTable;
+import static io.github.spannm.jackcess.test.TestUtil.createExpectedRow;
+import static io.github.spannm.jackcess.test.TestUtil.createExpectedTable;
+import static io.github.spannm.jackcess.test.TestUtil.createTempFile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.spannm.jackcess.Database;
 import io.github.spannm.jackcess.DatabaseBuilder;
@@ -23,7 +27,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/money2001.mny", "src/test/resources/data/money2001-pwd.mny"})
-    void testMSISAM2001(String dbFileName) throws Exception {
+    void msisam2001(String dbFileName) throws Exception {
 
         assertThrows(UnsupportedOperationException.class,
             () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
@@ -35,7 +39,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/money2002.mny"})
-    void testMSISAM2002(String dbFileName) throws Exception {
+    void msisam2002(String dbFileName) throws Exception {
         try (Database db = open(dbFileName, true, null)) {
             doCheckMSISAM2002Db(db);
         }
@@ -43,7 +47,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/money2008.mny"})
-    void testMSISAM2008(String dbFileName) throws Exception {
+    void msisam2008(String dbFileName) throws Exception {
         try (Database db = open("src/test/resources/data/money2008.mny", true, null)) {
             doCheckMSISAM2008Db(db);
         }
@@ -51,12 +55,12 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/money2008-pwd.mny"})
-    void testMSISAM2008Password(String dbFileName) throws Exception {
+    void msisam2008Password(String dbFileName) throws Exception {
         IllegalStateException ex1 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, null));
-        assertEquals("Incorrect password provided", ex1.getMessage());
+        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
 
         IllegalStateException ex2 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, "WrongPassword"));
-        assertEquals("Incorrect password provided", ex2.getMessage());
+        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
 
         try (Database db = open(dbFileName, true, "Test12345")) {
             doCheckMSISAM2008Db(db);
@@ -65,12 +69,12 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db-enc.mdb"})
-    void testReadJet2000(String dbFileName) throws Exception {
+    void readJet2000(String dbFileName) throws Exception {
         assertThrows(UnsupportedOperationException.class,
             () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
 
         try (Database db = open(dbFileName, true, null)) {
-            assertEquals(Database.FileFormat.V2000, db.getFileFormat());
+            assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.V2000);
 
             doCheckJetDb(db, 0);
         }
@@ -78,19 +82,19 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db97-enc.mdb"})
-    void testReadJet1997(String dbFileName) throws Exception {
+    void readJet1997(String dbFileName) throws Exception {
         assertThrows(UnsupportedOperationException.class,
             () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
 
         try (Database db = open(dbFileName, true, null)) {
-            assertEquals(Database.FileFormat.V1997, db.getFileFormat());
+            assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.V1997);
 
             doCheckJetDb(db, 0);
         }
     }
 
     @Test
-    void testWriteJet() throws Exception {
+    void writeJet() throws Exception {
         try (Database db = openCopy("src/test/resources/data/db-enc.mdb", null)) {
             Table t = db.getTable("Table1");
 
@@ -111,15 +115,15 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db2007-oldenc.accdb", "src/test/resources/data/db2007-enc.accdb"})
-    void testReadOfficeEnc(String dbFileName) throws Exception {
+    void readOfficeEnc(String dbFileName) throws Exception {
         assertThrows(UnsupportedOperationException.class,
             () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
 
         IllegalStateException ex1 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, null));
-        assertEquals("Incorrect password provided", ex1.getMessage());
+        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
 
         IllegalStateException ex2 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, "WrongPassword"));
-        assertEquals("Incorrect password provided", ex2.getMessage());
+        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
 
         try (Database db = open(dbFileName, true, "Test123")) {
             db.getSystemTable("MSysQueries");
@@ -129,7 +133,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db2013-enc.accdb"})
-    void testReadOfficeEnc2013(String dbFileName) throws Exception {
+    void readOfficeEnc2013(String dbFileName) throws Exception {
         try (Database db = open(dbFileName, true, "1234")) {
             db.getSystemTable("MSysQueries");
             doCheckOffice2013Db(db, 0);
@@ -138,7 +142,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db2007-oldenc.accdb", "src/test/resources/data/db2007-enc.accdb"})
-    void testWriteOfficeEnc(String dbFileName) throws Exception {
+    void writeOfficeEnc(String dbFileName) throws Exception {
         try (Database db = openCopy(dbFileName, "Test123")) {
             Table t = db.getTable("Table1");
 
@@ -158,7 +162,7 @@ class CryptCodecProviderTest extends AbstractBaseTest {
     }
 
     @Test
-    void testPasswordCallback() throws Exception {
+    void passwordCallback() throws Exception {
         AtomicInteger count = new AtomicInteger();
         PasswordCallback pc = () -> {
             count.incrementAndGet();
@@ -170,9 +174,9 @@ class CryptCodecProviderTest extends AbstractBaseTest {
             .withReadOnly(true).withCodecProvider(new CryptCodecProvider(pc)).open();
 
         Table t = db.getTable("Table1");
-        assertNotNull(t);
+        assertThat(t).isNotNull();
 
-        assertEquals(0, count.get());
+        assertThat(count.get()).isEqualTo(0);
 
         CryptCodecProvider cryptCodecProvider = new CryptCodecProvider();
         cryptCodecProvider.setPasswordCallback(pc);
@@ -182,29 +186,29 @@ class CryptCodecProviderTest extends AbstractBaseTest {
             .withCodecProvider(cryptCodecProvider).open();
 
         t = db.getTable("Table1");
-        assertNotNull(t);
+        assertThat(t).isNotNull();
 
-        assertEquals(1, count.get());
+        assertThat(count.get()).isEqualTo(1);
     }
 
     @Test
-    void testNonStandardProvider() throws Exception {
+    void nonStandardProvider() throws Exception {
         String fname = "src/test/resources/data/db-nonstandard.accdb";
 
         assertThrows(UnsupportedOperationException.class, () -> new DatabaseBuilder().withFile(new File(fname)).withReadOnly(true).open());
 
         InvalidCredentialsException ex1 = assertThrows(InvalidCredentialsException.class, () -> open(fname, true, null));
-        assertEquals("Incorrect password provided", ex1.getMessage());
+        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
 
         InvalidCredentialsException ex2 = assertThrows(InvalidCredentialsException.class, () -> open(fname, true, "WrongPassword"));
-        assertEquals("Incorrect password provided", ex2.getMessage());
+        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
 
         try (Database db = open(fname, true, "password")) {
             db.getSystemTable("MSysQueries");
 
             Table t = db.getTable("Table_One");
 
-            assertNotNull(t.getColumn("ID"));
+            assertThat(t.getColumn("ID")).isNotNull();
         }
     }
 
@@ -256,73 +260,71 @@ class CryptCodecProviderTest extends AbstractBaseTest {
     }
 
     private static void doCheckMSISAM2001Db(Database db) throws Exception {
-        assertEquals(Database.FileFormat.MSISAM, db.getFileFormat());
+        assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.MSISAM);
 
-        assertEquals(Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "CAT", "CESRC",
-            "CLI", "CLI_DAT", "CNTRY", "CRIT", "CRNC", "CRNC_EXCHG", "CT", "DHD", "FI", "Goal Custom Pool", "Inventory Custom Pool", "ITM", "IVTY", "LOT", "LSTEP", "MAIL", "MCSRC", "PAY", "PGM",
-            "PMT", "PORT_REC", "Portfolio View Custom Pool", "POS_STMT", "PRODUCT", "PROJ", "PROV_FI", "PROV_FI_PAY", "Report Custom Pool", "SAV_GOAL", "SEC", "SEC_SPLIT", "SIC", "SOQ", "SP", "STMT",
-            "SVC", "Tax Rate Custom Pool", "TAXLINE", "TMI", "TRIP", "TRN", "TRN_INV", "TRN_INVOICE", "TRN_OL", "TRN_SPLIT", "TRN_XFER", "TXSRC", "VIEW", "Worksheet Custom Pool", "XACCT", "XMAPACCT",
-            "XMAPSAT", "XPAY"), db.getTableNames());
+        assertThat(db.getTableNames()).containsExactlyInAnyOrderElementsOf(Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "CAT", "CESRC",
+                "CLI", "CLI_DAT", "CNTRY", "CRIT", "CRNC", "CRNC_EXCHG", "CT", "DHD", "FI", "Goal Custom Pool", "Inventory Custom Pool", "ITM", "IVTY", "LOT", "LSTEP", "MAIL", "MCSRC", "PAY", "PGM",
+                "PMT", "PORT_REC", "Portfolio View Custom Pool", "POS_STMT", "PRODUCT", "PROJ", "PROV_FI", "PROV_FI_PAY", "Report Custom Pool", "SAV_GOAL", "SEC", "SEC_SPLIT", "SIC", "SOQ", "SP", "STMT",
+                "SVC", "Tax Rate Custom Pool", "TAXLINE", "TMI", "TRIP", "TRN", "TRN_INV", "TRN_INVOICE", "TRN_OL", "TRN_SPLIT", "TRN_XFER", "TXSRC", "VIEW", "Worksheet Custom Pool", "XACCT", "XMAPACCT",
+                "XMAPSAT", "XPAY"));
 
         Table t = db.getTable("CRNC");
 
         Set<String> cols = Set.of("hcrnc", "szName", "lcid", "szIsoCode", "szSymbol");
 
-        assertEquals(createExpectedRow("hcrnc", 1, "szName", "Argentinean peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 1, "szName", "Argentinean peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BECUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BECUS"));
     }
 
     private static void doCheckMSISAM2002Db(Database db) throws Exception {
-        assertEquals(Database.FileFormat.MSISAM, db.getFileFormat());
+        assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.MSISAM);
 
-        assertEquals(
-            Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "BILL", "BILL_FLD",
+        assertThat(db.getTableNames()).containsExactlyInAnyOrderElementsOf(Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "BILL", "BILL_FLD",
                 "CAT", "CESRC", "CLI", "CLI_DAT", "CNTRY", "CRIT", "CRNC", "CRNC_EXCHG", "CT", "DHD", "FI", "Goal Custom Pool", "Inventory Custom Pool", "ITM", "IVTY", "LOT", "LSTEP", "MAIL", "MCSRC",
                 "PAY", "PGM", "PMT", "PORT_REC", "Portfolio View Custom Pool", "POS_STMT", "PRODUCT", "PROJ", "PROV_FI", "PROV_FI_PAY", "Report Custom Pool", "SAV_GOAL", "SEC", "SEC_SPLIT", "SIC",
                 "SOQ", "SP", "STMT", "SVC", "Tax Rate Custom Pool", "TAXLINE", "TMI", "TRIP", "TRN", "TRN_INV", "TRN_INVOICE", "TRN_OL", "TRN_SPLIT", "TRN_XFER", "TXSRC", "UIE", "UKSavings", "UKWiz",
                 "UKWizAddress", "UKWizCompanyCar", "UKWizLoan", "UKWizMortgage", "UKWizPenScheme", "UKWizPension", "UKWizWillExecutor", "UKWizWillGift", "UKWizWillGuardian", "UKWizWillLovedOne",
-                "UKWizWillMaker", "UKWizWillPerson", "UKWizWillResidue", "UNOTE", "VIEW", "Worksheet Custom Pool", "XACCT", "XBAG", "XMAPACCT", "XMAPSAT", "XPAY"),
-            db.getTableNames());
+                "UKWizWillMaker", "UKWizWillPerson", "UKWizWillResidue", "UNOTE", "VIEW", "Worksheet Custom Pool", "XACCT", "XBAG", "XMAPACCT", "XMAPSAT", "XPAY"));
 
         Table t = db.getTable("CRNC");
 
         Set<String> cols = Set.of("hcrnc", "szName", "lcid", "szIsoCode", "szSymbol");
 
-        assertEquals(createExpectedRow("hcrnc", 1, "szName", "Argentinian peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 1, "szName", "Argentinian peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BECUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BECUS"));
     }
 
     private static void doCheckMSISAM2008Db(Database db) throws Exception {
-        assertEquals(Database.FileFormat.MSISAM, db.getFileFormat());
+        assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.MSISAM);
 
-        assertEquals(Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "BILL",
-            "BILL_FLD", "CAT", "CESRC", "CLI", "CLI_DAT", "CNTRY", "CRIT", "CRNC", "CRNC_EXCHG", "CT", "DHD", "Feature Expiration Custom Pool", "FI", "Inventory Custom Pool", "ITM", "IVTY", "LOT",
-            "LSTEP", "MAIL", "MCSRC", "PAY", "PGM", "PM_RPT", "PMT", "PORT_REC", "Portfolio View Custom Pool", "POS_STMT", "PREF", "PREF_LIST", "PRODUCT", "PROJ", "PROV_FI", "PROV_FI_PAY",
-            "Report Custom Pool", "SAV_GOAL", "SCHE_TASK", "SEC", "SEC_SPLIT", "SIC", "SOQ", "SP", "STMT", "SVC", "Tax Rate Custom Pool", "Tax Scenario Custom Pool", "TAXLINE", "TMI", "TRIP", "TRN",
-            "TRN_INV", "TRN_INVOICE", "TRN_OL", "TRN_SPLIT", "TRN_XFER", "TXSRC", "UI_VIEW", "UIE", "UNOTE", "VIEW", "Worksheet Custom Pool", "X_FMLA", "X_ITM", "X_META_REF", "X_PARM", "XACCT",
-            "XBAG", "XMAPACCT", "XMAPSAT", "XMAPSEC", "XPAY", "XSYNCCHUNK"), db.getTableNames());
+        assertThat(db.getTableNames()).containsExactlyInAnyOrderElementsOf(Set.of("ACCT", "ADDR", "ADV", "ADV_SUM", "Advisor Important Dates Custom Pool", "Asset Allocation Custom Pool", "AUTO", "AWD", "BGT", "BGT_BKT", "BGT_ITM", "BILL",
+                "BILL_FLD", "CAT", "CESRC", "CLI", "CLI_DAT", "CNTRY", "CRIT", "CRNC", "CRNC_EXCHG", "CT", "DHD", "Feature Expiration Custom Pool", "FI", "Inventory Custom Pool", "ITM", "IVTY", "LOT",
+                "LSTEP", "MAIL", "MCSRC", "PAY", "PGM", "PM_RPT", "PMT", "PORT_REC", "Portfolio View Custom Pool", "POS_STMT", "PREF", "PREF_LIST", "PRODUCT", "PROJ", "PROV_FI", "PROV_FI_PAY",
+                "Report Custom Pool", "SAV_GOAL", "SCHE_TASK", "SEC", "SEC_SPLIT", "SIC", "SOQ", "SP", "STMT", "SVC", "Tax Rate Custom Pool", "Tax Scenario Custom Pool", "TAXLINE", "TMI", "TRIP", "TRN",
+                "TRN_INV", "TRN_INVOICE", "TRN_OL", "TRN_SPLIT", "TRN_XFER", "TXSRC", "UI_VIEW", "UIE", "UNOTE", "VIEW", "Worksheet Custom Pool", "X_FMLA", "X_ITM", "X_META_REF", "X_PARM", "XACCT",
+                "XBAG", "XMAPACCT", "XMAPSAT", "XMAPSEC", "XPAY", "XSYNCCHUNK"));
 
         Table t = db.getTable("CRNC");
 
         Set<String> cols = Set.of("hcrnc", "szName", "lcid", "szIsoCode", "szSymbol");
 
-        assertEquals(createExpectedRow("hcrnc", 1, "szName", "Argentine peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 1, "szName", "Argentine peso", "lcid", 11274, "szIsoCode", "ARS", "szSymbol", "/ARSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 2, "szName", "Australian dollar", "lcid", 3081, "szIsoCode", "AUD", "szSymbol", "/AUDUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 3, "szName", "Austrian schilling", "lcid", 3079, "szIsoCode", "ATS", "szSymbol", "/ATSUS"));
 
-        assertEquals(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BEFUS"), t.getDefaultCursor().getNextRow(cols));
+        assertThat(t.getDefaultCursor().getNextRow(cols)).isEqualTo(createExpectedRow("hcrnc", 4, "szName", "Belgian franc", "lcid", 2060, "szIsoCode", "BEF", "szSymbol", "/BEFUS"));
     }
 
     Database openCopy(String fileName, String pwd) throws Exception {

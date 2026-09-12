@@ -1,7 +1,11 @@
 package io.github.spannm.jackcess.encrypt.impl.office;
 
 import io.github.spannm.jackcess.encrypt.InvalidCryptoConfigurationException;
-import io.github.spannm.jackcess.encrypt.model.*;
+import io.github.spannm.jackcess.encrypt.model.CTDataIntegrity;
+import io.github.spannm.jackcess.encrypt.model.CTEncryption;
+import io.github.spannm.jackcess.encrypt.model.CTKeyData;
+import io.github.spannm.jackcess.encrypt.model.CTKeyEncryptor;
+import io.github.spannm.jackcess.encrypt.model.CTKeyEncryptors;
 import io.github.spannm.jackcess.encrypt.model.cert.CTCertificateKeyEncryptor;
 import io.github.spannm.jackcess.encrypt.model.cert.STCertificateKeyEncryptorUri;
 import io.github.spannm.jackcess.encrypt.model.password.CTPasswordKeyEncryptor;

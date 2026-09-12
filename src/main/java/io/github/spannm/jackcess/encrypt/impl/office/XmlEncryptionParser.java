@@ -26,6 +26,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * Parser for the xml encryption descriptor of agile encryption (OC: 2.3.4.10).  Builds the
+ * {@code io.github.spannm.jackcess.encrypt.model} objects from the xml using a plain, securely
+ * configured DOM parser (external entities and DTDs disabled), so that no JAXB runtime is required
+ * at runtime even though the model classes were generated from the corresponding schemas.
+ */
 public final class XmlEncryptionParser {
     private static final Logger         LOGGER                      = System.getLogger(XmlEncryptionParser.class.getName());
 
@@ -41,6 +47,14 @@ public final class XmlEncryptionParser {
     private XmlEncryptionParser() {
     }
 
+    /**
+     * Parses the given xml encryption descriptor.
+     *
+     * @param _xmlBytes the raw xml bytes taken from the database header
+     * @return the parsed encryption descriptor
+     * @throws InvalidCryptoConfigurationException if the xml is malformed or does not describe an
+     *             office encryption configuration
+     */
     public static CTEncryption parseEncryptionDescriptor(byte[] _xmlBytes) {
         try {
             Document doc = newBuilder().parse(new ByteArrayInputStream(_xmlBytes));

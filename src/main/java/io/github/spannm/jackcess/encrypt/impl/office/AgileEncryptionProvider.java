@@ -15,6 +15,14 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * Office encryption provider implementing "agile encryption" (OC: 2.3.4.10 and following), the
+ * scheme used by encryption provider version 4.4.  The actual algorithms are not fixed but
+ * described by an xml encryption descriptor embedded in the database header, which is read via
+ * {@link XmlEncryptionDescriptor}.  Only a single password key encryptor is supported; the
+ * intermediate key it protects is decrypted in the constructor and subsequently used, together
+ * with a page specific IV, to decrypt the database pages.
+ */
 public final class AgileEncryptionProvider extends BlockCipherProvider {
     private static final int             RESERVED_VAL             = 0x40;
     private static final byte[]          ENC_VERIFIER_INPUT_BLOCK = {(byte) 0xfe, (byte) 0xa7, (byte) 0xd2, (byte) 0x76, (byte) 0x3b, (byte) 0x4b, (byte) 0x9e, (byte) 0x79};
@@ -25,6 +33,17 @@ public final class AgileEncryptionProvider extends BlockCipherProvider {
     private final CTPasswordKeyEncryptor pwdKeyEnc;
     private final byte[]                 keyValue;
 
+    /**
+     * Creates a new provider reading its configuration from the xml encryption descriptor contained
+     * in the given encryption info buffer.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     * @throws InvalidCryptoConfigurationException if the encryption descriptor is invalid or does
+     *             not contain exactly one password key encryptor
+     */
     public AgileEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) {
         super(_channel, _encodingKey);
 

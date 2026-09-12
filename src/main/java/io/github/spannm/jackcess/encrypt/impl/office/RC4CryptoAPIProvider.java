@@ -13,6 +13,12 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * Office encryption provider implementing "RC4 CryptoAPI encryption" (OC: 2.3.5).  Reads the
+ * {@link EncryptionHeader} and {@link EncryptionVerifier} structures (restricted to RC4 with SHA-1)
+ * and derives the per page RC4 key from the verifier salt, the password and the page specific
+ * encoding key.
+ */
 public final class RC4CryptoAPIProvider extends StreamCipherProvider {
     private static final Set<EncryptionHeader.CryptoAlgorithm> VALID_CRYPTO_ALGOS = EnumSet.of(EncryptionHeader.CryptoAlgorithm.RC4);
     private static final Set<EncryptionHeader.HashAlgorithm>   VALID_HASH_ALGOS   = EnumSet.of(EncryptionHeader.HashAlgorithm.SHA1);
@@ -22,6 +28,16 @@ public final class RC4CryptoAPIProvider extends StreamCipherProvider {
     private final byte[]                                       baseHash;
     private final int                                          encKeyByteSize;
 
+    /**
+     * Creates a new provider reading its configuration from the given encryption info buffer.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     * @throws io.github.spannm.jackcess.encrypt.InvalidCryptoConfigurationException if the
+     *             encryption info does not describe a valid RC4/SHA-1 configuration
+     */
     public RC4CryptoAPIProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) {
         super(_channel, _encodingKey);
         header = EncryptionHeader.read(_encProvBuf, VALID_CRYPTO_ALGOS, VALID_HASH_ALGOS);

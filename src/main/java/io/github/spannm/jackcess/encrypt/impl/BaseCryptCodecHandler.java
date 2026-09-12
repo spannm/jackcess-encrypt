@@ -33,13 +33,19 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * Common CodecHandler support.
+ * Common CodecHandler support.  Handles the parts shared by all supported encryption schemes:
+ * caching of the per page cipher parameters, encrypting and decrypting page buffers with either a
+ * stream or a block cipher and the various hashing and byte array helpers used during key
+ * derivation.  Subclasses provide the actual cipher and the scheme specific key computation via
+ * {@link #computeCipherParams}.
  *
  * @author Vladimir Berezniker
  */
 public abstract class BaseCryptCodecHandler implements CodecHandler {
 
+    /** cipher init mode constant for decryption */
     public static final boolean              CIPHER_DECRYPT_MODE = false;
+    /** cipher init mode constant for encryption */
     public static final boolean              CIPHER_ENCRYPT_MODE = true;
 
     private final PageChannel                channel;
@@ -47,11 +53,24 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     private KeyCache<CipherParameters>       paramCache;
     private TempBufferHolder                 tempBufH;
 
+    /**
+     * Creates a new handler for the given page channel.
+     *
+     * @param _channel the page channel of the database being read or written
+     * @param _encodingKey the database specific encoding key, may be {@code null} if the encryption
+     *            scheme does not use one
+     */
     protected BaseCryptCodecHandler(PageChannel _channel, byte[] _encodingKey) {
         channel = _channel;
         encodingKey = _encodingKey;
     }
 
+    /**
+     * Returns the (cached) cipher parameters for the given page.
+     *
+     * @param _pageNumber the database page number
+     * @return the cipher parameters to use for the given page
+     */
     protected CipherParameters getCipherParams(int _pageNumber) {
         if (paramCache == null) {
             paramCache = new KeyCache<>() {
@@ -64,18 +83,38 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
         return paramCache.get(_pageNumber);
     }
 
+    /**
+     * @return the database specific encoding key, may be {@code null}
+     */
     protected byte[] getEncodingKey() {
         return encodingKey;
     }
 
+    /**
+     * Returns the stream cipher used by this handler.
+     *
+     * @return the stream cipher instance
+     * @throws UnsupportedOperationException if this handler does not use a stream cipher
+     */
     protected StreamCipherCompat getStreamCipher() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns the block cipher used by this handler.
+     *
+     * @return the block cipher instance
+     * @throws UnsupportedOperationException if this handler does not use a block cipher
+     */
     protected BufferedBlockCipher getBlockCipher() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns a cleared, page sized scratch buffer owned by this handler.
+     *
+     * @return a temporary page buffer
+     */
     protected ByteBuffer getTempBuffer() {
         if (tempBufH == null) {
             tempBufH = TempBufferHolder.newHolder(TempBufferHolder.Type.SOFT, true);
@@ -86,7 +125,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
-     * Decrypts the given buffer using a stream cipher.
+     * Decrypts the given buffer in place using a stream cipher.
+     *
+     * @param _buffer the page buffer to decrypt, decrypted in place
+     * @param _pageNumber the number of the page contained in the buffer
      */
     protected void streamDecrypt(ByteBuffer _buffer, int _pageNumber) {
         StreamCipherCompat cipher = decryptInit(getStreamCipher(), getCipherParams(_pageNumber));
@@ -97,7 +139,13 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Encrypts the given buffer using a stream cipher and returns the encrypted
-     * buffer.
+     * buffer.  Encryption always starts at offset 0 of the page so that the cipher stream stays
+     * aligned with the page contents, hence the given page offset is not used to skip any input.
+     *
+     * @param _buffer the page buffer to encrypt
+     * @param _pageNumber the number of the page contained in the buffer
+     * @param _pageOffset the offset within the page at which the modified data starts
+     * @return a temporary buffer holding the encrypted page
      */
     protected ByteBuffer streamEncrypt(ByteBuffer _buffer, int _pageNumber, int _pageOffset) {
         StreamCipherCompat cipher = encryptInit(getStreamCipher(), getCipherParams(_pageNumber));
@@ -113,6 +161,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Decrypts the given buffer using a block cipher.
+     *
+     * @param _inPage the buffer holding the encrypted page
+     * @param _outPage the buffer receiving the decrypted page
+     * @param _pageNumber the number of the page contained in the buffer
      */
     protected void blockDecrypt(ByteBuffer _inPage, ByteBuffer _outPage, int _pageNumber) {
         BufferedBlockCipher cipher = decryptInit(getBlockCipher(), getCipherParams(_pageNumber));
@@ -130,6 +182,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Encrypts the given buffer using a block cipher and returns the encrypted
      * buffer.
+     *
+     * @param buffer the page buffer to encrypt
+     * @param pageNumber the number of the page contained in the buffer
+     * @return a temporary buffer holding the encrypted page
      */
     protected ByteBuffer blockEncrypt(ByteBuffer buffer, int pageNumber) {
         BufferedBlockCipher cipher = encryptInit(getBlockCipher(), getCipherParams(pageNumber));
@@ -152,6 +208,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Inits the given cipher for decryption with the given params.
+     *
+     * @param cipher the cipher to initialize
+     * @param params the cipher parameters (key and, if applicable, IV)
+     * @return the given cipher
      */
     protected static StreamCipherCompat decryptInit(StreamCipherCompat cipher, CipherParameters params) {
         cipher.init(CIPHER_DECRYPT_MODE, params);
@@ -160,6 +220,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Inits the given cipher for encryption with the given params.
+     *
+     * @param cipher the cipher to initialize
+     * @param params the cipher parameters (key and, if applicable, IV)
+     * @return the given cipher
      */
     protected static StreamCipherCompat encryptInit(StreamCipherCompat cipher, CipherParameters params) {
         cipher.init(CIPHER_ENCRYPT_MODE, params);
@@ -168,6 +232,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Inits the given cipher for decryption with the given params.
+     *
+     * @param cipher the cipher to initialize
+     * @param params the cipher parameters (key and, if applicable, IV)
+     * @return the given cipher
      */
     protected static BufferedBlockCipher decryptInit(BufferedBlockCipher cipher, CipherParameters params) {
         cipher.init(CIPHER_DECRYPT_MODE, params);
@@ -176,6 +244,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Inits the given cipher for encryption with the given params.
+     *
+     * @param cipher the cipher to initialize
+     * @param params the cipher parameters (key and, if applicable, IV)
+     * @return the given cipher
      */
     protected static BufferedBlockCipher encryptInit(BufferedBlockCipher cipher, CipherParameters params) {
         cipher.init(CIPHER_ENCRYPT_MODE, params);
@@ -184,6 +256,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Decrypts the given bytes using a stream cipher into a new byte[].
+     *
+     * @param _cipher the initialized stream cipher
+     * @param _encBytes the encrypted bytes
+     * @return a new array with the decrypted bytes
      */
     protected static byte[] decryptBytes(StreamCipherCompat _cipher, byte[] _encBytes) {
         byte[] bytes = new byte[_encBytes.length];
@@ -194,6 +270,11 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Decrypts the given bytes using a block cipher configured with the given
      * key and IV into a new byte[].
+     *
+     * @param keyBytes the cipher key
+     * @param iv the initialization vector
+     * @param encBytes the encrypted bytes
+     * @return a new array with the decrypted bytes
      */
     protected byte[] blockDecryptBytes(byte[] keyBytes, byte[] iv, byte[] encBytes) {
         BufferedBlockCipher cipher = decryptInit(getBlockCipher(), new ParametersWithIV(new KeyParameter(keyBytes), iv));
@@ -202,6 +283,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Decrypts the given bytes using a block cipher into a new byte[].
+     *
+     * @param _cipher the initialized block cipher
+     * @param _encBytes the encrypted bytes
+     * @return a new array with the decrypted bytes
      */
     protected static byte[] decryptBytes(BufferedBlockCipher _cipher, byte[] _encBytes) {
         try {
@@ -214,6 +299,9 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Gets the encoding key combined with the given page number.
+     *
+     * @param pageNumber the database page number
+     * @return a new array with the page number applied to the encoding key
      */
     protected byte[] getEncodingKey(int pageNumber) {
         return applyPageNumber(getEncodingKey(), 0, pageNumber);
@@ -221,6 +309,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Reads and returns the header page (page 0) from the given pageChannel.
+     *
+     * @param pageChannel the page channel to read from
+     * @return a buffer holding the (still encoded) header page
+     * @throws IOException if the page could not be read
      */
     protected static ByteBuffer readHeaderPage(PageChannel pageChannel) throws IOException {
         ByteBuffer buffer = pageChannel.createPageBuffer();
@@ -231,6 +323,11 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Returns a copy of the given key with the bytes of the given pageNumber
      * applied at the given offset using XOR.
+     *
+     * @param key the base key
+     * @param offset the offset within the key at which the page number is applied
+     * @param pageNumber the database page number
+     * @return a new array holding the modified key
      */
     public static byte[] applyPageNumber(byte[] key, int offset, int pageNumber) {
 
@@ -248,6 +345,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Hashes the given bytes using the given digest and returns the result.
+     *
+     * @param digest the digest to use
+     * @param bytes the bytes to hash
+     * @return the hash value
      */
     public static byte[] hash(Digest digest, byte[] bytes) {
         return hash(digest, bytes, null, 0);
@@ -256,6 +357,11 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Hashes the given bytes1 and bytes2 using the given digest and returns the
      * result.
+     *
+     * @param digest the digest to use
+     * @param bytes1 the first bytes to hash
+     * @param bytes2 the second bytes to hash
+     * @return the hash value
      */
     public static byte[] hash(Digest digest, byte[] bytes1, byte[] bytes2) {
         return hash(digest, bytes1, bytes2, 0);
@@ -264,6 +370,11 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Hashes the given bytes using the given digest and returns the hash fixed
      * to the given length.
+     *
+     * @param digest the digest to use
+     * @param bytes the bytes to hash
+     * @param resultLen the desired length of the result, {@code 0} for the natural digest length
+     * @return the hash value
      */
     public static byte[] hash(Digest digest, byte[] bytes, int resultLen) {
         return hash(digest, bytes, null, resultLen);
@@ -272,6 +383,12 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     /**
      * Hashes the given bytes1 and bytes2 using the given digest and returns the
      * hash fixed to the given length.
+     *
+     * @param _digest the digest to use
+     * @param _bytes1 the first bytes to hash
+     * @param _bytes2 the second bytes to hash, may be {@code null}
+     * @param _resultLen the desired length of the result, {@code 0} for the natural digest length
+     * @return the hash value
      */
     public static byte[] hash(Digest _digest, byte[] _bytes1, byte[] _bytes2, int _resultLen) {
         _digest.reset();
@@ -295,6 +412,8 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * @param _bytes the source bytes
+     * @param _len the desired length
      * @return a byte array of the given length, truncating or padding the given
      * byte array as necessary.
      */
@@ -303,6 +422,9 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * @param _bytes the source bytes
+     * @param _len the desired length
+     * @param _padByte the byte value used for padding
      * @return a byte array of the given length, truncating or padding the given
      * byte array as necessary using the given padByte.
      */
@@ -319,6 +441,7 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * @param _bytes the bytes to wrap
      * @return a new ByteBuffer wrapping the given bytes with the appropriate
      *         byte order
      */
@@ -328,6 +451,10 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Fills the given array with the given value and returns it.
+     *
+     * @param _bytes the array to fill
+     * @param _value the value written to every position of the array
+     * @return the given array
      */
     public static byte[] fill(byte[] _bytes, int _value) {
         Arrays.fill(_bytes, (byte) _value);
@@ -336,6 +463,13 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Processes all the bytes for the given block cipher.
+     *
+     * @param _cipher the initialized block cipher
+     * @param _inArray the input bytes
+     * @param _outArray the array receiving the processed bytes
+     * @param _inLen the number of input bytes to process
+     * @return the given output array
+     * @throws InvalidCipherTextException if the cipher could not finalize the data
      */
     protected static byte[] processBytesFully(BufferedBlockCipher _cipher, byte[] _inArray, byte[] _outArray, int _inLen) throws InvalidCipherTextException {
         int outLen = _cipher.processBytes(_inArray, 0, _inLen, _outArray, 0);
@@ -344,6 +478,7 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * @param _key the key bytes to test
      * @return {@code true} if the given bytes are all 0, {@code false}
      *         otherwise
      */
@@ -358,6 +493,9 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     /**
      * Generates the cipher parameters for the given page number.
+     *
+     * @param pageNumber the database page number
+     * @return the cipher parameters to use for the given page
      */
     protected abstract CipherParameters computeCipherParams(int pageNumber);
 

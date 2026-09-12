@@ -51,7 +51,8 @@
           The automatic module name is now: <code>io.github.spannm.jackcess.encrypt</code>
         </p>
         <p>
-          The project requires Java 11 or later to build as well as to use.
+          The project requires Java 11 or later to use.  Building it requires JDK 17 or later,
+          while the produced bytecode still targets Java 11.
         </p>
         <p>
           The Maven coordinates are: <code>io.github.spannm:jackcess-encrypt</code>.
@@ -110,13 +111,13 @@
       <ul>
         <li>Open a Database with normal Jet file encoding:
           <source>Database db = new DatabaseBuilder(myDbFile)
-  .setCodecProvider(new CryptCodecProvider())
+  .withCodecProvider(new CryptCodecProvider())
   .open();</source>
         </li>
         <li>Open a Database with an encoding which requires a password to
             decode:
             <source>Database db = new DatabaseBuilder(myDbFile)
-  .setCodecProvider(new CryptCodecProvider("MyDbPassword"))
+  .withCodecProvider(new CryptCodecProvider("MyDbPassword"))
   .open();</source>
         </li>
       </ul>

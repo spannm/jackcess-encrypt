@@ -7,11 +7,19 @@ import io.github.spannm.jackcess.impl.PageChannel;
 import java.nio.ByteBuffer;
 
 /**
- * Base CodecHandler support for Jet RC4 encryption based CodecHandlers.
+ * Base CodecHandler support for Jet RC4 encryption based CodecHandlers.  Handles page
+ * encoding/decoding with a lazily created RC4 engine and skips pages outside the encrypted page
+ * range reported by {@link #getMaxEncodedPage()}.
  */
 public abstract class BaseJetCryptCodecHandler extends BaseCryptCodecHandler {
     private StreamCipherCompat engine;
 
+    /**
+     * Creates a new handler for the given page channel.
+     *
+     * @param _channel the page channel of the database being read or written
+     * @param _encodingKey the database specific encoding key, may be {@code null}
+     */
     protected BaseJetCryptCodecHandler(PageChannel _channel, byte[] _encodingKey) {
         super(_channel, _encodingKey);
     }
@@ -61,5 +69,11 @@ public abstract class BaseJetCryptCodecHandler extends BaseCryptCodecHandler {
         return _pageNumber > 0 && _pageNumber <= getMaxEncodedPage();
     }
 
+    /**
+     * Returns the number of the last encrypted page.  Pages beyond this number (and the header
+     * page 0) are stored unencrypted.
+     *
+     * @return the highest page number which is encrypted
+     */
     protected abstract int getMaxEncodedPage();
 }

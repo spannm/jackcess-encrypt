@@ -3,8 +3,14 @@ package io.github.spannm.jackcess.encrypt.util;
 /**
  * Factory for instantiating {@link StreamCipherCompat} instances.  Bouncy
  * Castle 1.51 made a binary incompatible change to the StreamCipher API.
- * This factory enables jackcess-encrypt to function with both the pre 1.51
- * API as well as the 1.51+ API.
+ * This factory shields the rest of the library from that difference by
+ * locating a matching engine implementation reflectively at class load time.
+ * <p>
+ * The current distribution only ships the 1.51+ compatible implementation
+ * ({@link RC4EngineCompat}).  The lookup of the legacy (1.50 and earlier)
+ * implementation is retained as a fallback for setups which supply such a
+ * class themselves; if neither can be loaded, class initialization fails with
+ * an {@link IllegalStateException}.
  */
 public abstract class StreamCipherFactory {
     /** compatible factory for RC4Engine instances */

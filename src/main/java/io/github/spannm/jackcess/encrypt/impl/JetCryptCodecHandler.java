@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * CodecHandler for Jet databases.
+ * CodecHandler for Jet databases.  Implements the simple RC4 "encryption" of classic Jet files
+ * where the encoding key is stored within the database header itself, so no password is required.
  *
  * @author Vladimir Berezniker
  */
@@ -34,6 +35,14 @@ public class JetCryptCodecHandler extends BaseJetCryptCodecHandler {
         super(channel, encodingKey);
     }
 
+    /**
+     * Creates a handler for the given Jet database.
+     *
+     * @param channel the page channel of the database being opened
+     * @return a handler for the database, or the dummy (no-op) handler if the database turns out to
+     *         be unencoded
+     * @throws IOException if the database header could not be read
+     */
     public static CodecHandler create(PageChannel channel) throws IOException {
         ByteBuffer buffer = readHeaderPage(channel);
         JetFormat format = channel.getFormat();

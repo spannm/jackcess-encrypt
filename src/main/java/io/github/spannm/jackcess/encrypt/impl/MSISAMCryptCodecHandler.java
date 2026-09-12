@@ -31,7 +31,11 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
- * CodecHandler for MSISAM databases.
+ * CodecHandler for MSISAM (Microsoft Money) databases.  Newer files use a password digest (MD5 or
+ * SHA-1, depending on the header flags) combined with the header salt as RC4 key, which is
+ * verified against a known encrypted byte sequence in the header.  Older files fall back to
+ * jet-style encryption with a key derived from the header (see
+ * {@link #create(Supplier, PageChannel, Charset)}).
  *
  * @author Vladimir Berezniker
  */
@@ -66,6 +70,19 @@ public class MSISAMCryptCodecHandler extends BaseJetCryptCodecHandler {
         baseHash = ByteUtil.concat(pwdDigest, baseSalt);
     }
 
+    /**
+     * Creates a handler for the given Money database.  For files using the newer, hash based
+     * encryption the password is retrieved from the given supplier and verified; older files use
+     * jet-style encryption with a key computed from the database header and require no password.
+     *
+     * @param _callback supplier invoked if a password is required
+     * @param _channel the page channel of the database being opened
+     * @param _charset the charset of the database being opened
+     * @return a handler for the database
+     * @throws IOException if the database header could not be read
+     * @throws io.github.spannm.jackcess.encrypt.InvalidCredentialsException if the given password
+     *             is not correct
+     */
     public static CodecHandler create(Supplier<String> _callback, PageChannel _channel, Charset _charset) throws IOException {
         ByteBuffer buffer = readHeaderPage(_channel);
 

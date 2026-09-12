@@ -15,6 +15,12 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * Office encryption provider implementing ECMA-376 "standard encryption" (OC: 2.3.4.5 and
+ * following), i.e. AES in ECB mode with a SHA-1 based key derivation using 50000 hash iterations.
+ * The subclass {@link NonStandardEncryptionProvider} reuses this implementation without the hash
+ * iterations.
+ */
 public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
 
     private static final Set<EncryptionHeader.CryptoAlgorithm> VALID_CRYPTO_ALGOS = EnumSet.of(
@@ -29,10 +35,30 @@ public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
     private byte[]                                             baseHash;
     private final int                                          encKeyByteSize;
 
+    /**
+     * Creates a new provider using the standard number of hash iterations.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     * @throws IOException if the encryption info could not be read
+     */
     public ECMAStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) throws IOException {
         this(_channel, _encodingKey, _encProvBuf, _password, HASH_ITERATIONS);
     }
 
+    /**
+     * Creates a new provider using the given number of hash iterations.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     * @param _hashIterations the number of key derivation hash iterations
+     * @throws io.github.spannm.jackcess.encrypt.InvalidCryptoConfigurationException if the
+     *             encryption info does not describe a valid AES/SHA-1 configuration
+     */
     protected ECMAStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password, int _hashIterations) {
         super(_channel, _encodingKey);
 

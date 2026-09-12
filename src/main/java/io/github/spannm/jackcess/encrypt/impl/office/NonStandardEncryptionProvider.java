@@ -14,6 +14,15 @@ import java.nio.ByteBuffer;
 public class NonStandardEncryptionProvider extends ECMAStandardEncryptionProvider {
     private static final int HASH_ITERATIONS = 0;
 
+    /**
+     * Creates a new provider reading its configuration from the given encryption info buffer.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     * @throws IOException if the encryption info could not be read
+     */
     public NonStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) throws IOException {
         super(_channel, _encodingKey, _encProvBuf, _password, HASH_ITERATIONS);
     }

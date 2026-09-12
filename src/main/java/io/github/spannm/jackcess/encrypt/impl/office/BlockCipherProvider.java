@@ -8,9 +8,22 @@ import org.bouncycastle.crypto.BufferedBlockCipher;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Base class for office encryption providers which use a block cipher (e.g. AES).  Manages the
+ * lazily created, phase dependent {@link BufferedBlockCipher} and implements page
+ * encoding/decoding on top of it.  Subclasses supply the actual cipher, either by overriding
+ * {@link #initCipher()} or by implementing the phase specific {@link #initPwdCipher()} and
+ * {@link #initCryptCipher()}.
+ */
 public abstract class BlockCipherProvider extends OfficeCryptCodecHandler {
     private BufferedBlockCipher cipher;
 
+    /**
+     * Creates a new provider for the given page channel.
+     *
+     * @param _channel the page channel of the database being read or written
+     * @param _encodingKey the encoding key read from the database header
+     */
     public BlockCipherProvider(PageChannel _channel, byte[] _encodingKey) {
         super(_channel, _encodingKey);
     }
@@ -37,6 +50,11 @@ public abstract class BlockCipherProvider extends OfficeCryptCodecHandler {
         return false;
     }
 
+    /**
+     * Creates the block cipher matching the current phase.
+     *
+     * @return a new block cipher instance
+     */
     protected BlockCipher initCipher() {
         switch (getPhase()) {
             case PWD_VERIFY:
@@ -48,10 +66,22 @@ public abstract class BlockCipherProvider extends OfficeCryptCodecHandler {
         }
     }
 
+    /**
+     * Creates the block cipher used while verifying the password.
+     *
+     * @return a new block cipher instance
+     * @throws UnsupportedOperationException if this provider does not use a phase specific cipher
+     */
     protected BlockCipher initPwdCipher() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates the block cipher used while encrypting and decrypting pages.
+     *
+     * @return a new block cipher instance
+     * @throws UnsupportedOperationException if this provider does not use a phase specific cipher
+     */
     protected BlockCipher initCryptCipher() {
         throw new UnsupportedOperationException();
     }

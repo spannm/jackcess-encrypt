@@ -21,9 +21,11 @@ import java.util.function.Supplier;
  *
  * <ul>
  * <li>If a {@link PasswordCallback} or {@link Supplier} has been provided
- *     (via the constructor or {@link #setPasswordCallback}), then
- *     {@link PasswordCallback#getPassword} will be invoked to retrieve the
- *     necessary password</li>
+ *     (via the constructor, {@link #setPasswordCallback} or
+ *     {@link #setPasswordSupplier}), then {@link Supplier#get} will be invoked
+ *     to retrieve the necessary password (which, for a
+ *     {@link PasswordCallback}, delegates to
+ *     {@link PasswordCallback#getPassword})</li>
  * <li>If no password callback has been configured, then {@link #getPassword}
  *     will be invoked directly on the CryptCodecProvider (which will return
  *     the password configured via the constructor or {@link

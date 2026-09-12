@@ -11,11 +11,24 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * Office encryption provider implementing "office binary document RC4 encryption" (OC: 2.3.6),
+ * the scheme used by encryption provider version 1.1.  The key is derived from an MD5 digest of
+ * the password and the header salt and combined with the page specific encoding key.
+ */
 public final class OfficeBinaryDocRC4Provider extends StreamCipherProvider {
     private final byte[] encVerifier     = new byte[16];
     private final byte[] encVerifierHash = new byte[16];
     private final byte[] baseHash;
 
+    /**
+     * Creates a new provider reading its configuration from the given encryption info buffer.
+     *
+     * @param _channel the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf buffer positioned at the encryption provider info
+     * @param _password the password bytes (UTF-16LE encoded)
+     */
     public OfficeBinaryDocRC4Provider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) {
         super(_channel, _encodingKey);
 

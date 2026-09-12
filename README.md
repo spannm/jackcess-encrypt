@@ -22,7 +22,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 * **Drop-in Codec**: Implements Jackcess's `CodecProvider` SPI — plug it into `DatabaseBuilder` and encrypted files just open.
 
-* **Broad Format Coverage**: Supports classic Jet/MSISAM RC4 obfuscation as well as modern Office/ECMA-376 agile and standard encryption (AES) used by `.accdb`.
+* **Broad Format Coverage**: Supports classic Jet/MSISAM RC4 obfuscation, the RC4 CryptoAPI and binary document RC4 schemes, as well as modern Office/ECMA-376 standard and agile encryption (AES) used by `.accdb`. Extensible ("external provider") encryption is not supported, as it relies on arbitrary third-party providers.
 
 * **Microsoft Money Support**: Reads password-protected and unprotected Money (`.mny`) files.
 
@@ -32,7 +32,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 ## 🛠 Tech Stack & Dependencies
 
-* **Java Version**: 11 or higher (LTS versions like Java 17 and 21 are fully supported and tested).
+* **Java Version**: 11 or higher at runtime (LTS versions like Java 17 and 21 are fully supported and tested). Building the project itself requires JDK 17 or higher.
 
 * **Main Dependencies**:
   * [Jackcess](https://github.com/spannm/jackcess) (the base library this project extends)

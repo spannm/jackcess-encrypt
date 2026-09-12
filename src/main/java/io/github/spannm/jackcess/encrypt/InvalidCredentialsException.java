@@ -6,6 +6,11 @@ package io.github.spannm.jackcess.encrypt;
 public class InvalidCredentialsException extends IllegalStateException {
     private static final long serialVersionUID = 20170130L;
 
+    /**
+     * Creates a new exception with the given message.
+     *
+     * @param msg the detail message
+     */
     public InvalidCredentialsException(String msg) {
         super(msg);
     }

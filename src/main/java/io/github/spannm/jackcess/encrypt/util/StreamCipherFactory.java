@@ -31,9 +31,17 @@ public abstract class StreamCipherFactory {
         RC4_ENGINE_FACTORY = factory;
     }
 
+    /**
+     * Creates a new factory instance.
+     */
     protected StreamCipherFactory() {
     }
 
+    /**
+     * Creates a new RC4 engine using the bouncycastle version found on the classpath.
+     *
+     * @return a new, uninitialized RC4 engine
+     */
     public static StreamCipherCompat newRC4Engine() {
         return RC4_ENGINE_FACTORY.newInstance();
     }
@@ -48,5 +56,10 @@ public abstract class StreamCipherFactory {
         return factory;
     }
 
+    /**
+     * Creates a new stream cipher instance.
+     *
+     * @return a new, uninitialized stream cipher
+     */
     public abstract StreamCipherCompat newInstance();
 }

@@ -13,6 +13,9 @@ public final class CryptCodecUtil {
 
     /**
      * Configures a new CryptCodecProvider on the given DatabaseBuilder.
+     *
+     * @param _dbb the database builder to configure
+     * @return the given database builder
      */
     public static DatabaseBuilder withCodecProvider(DatabaseBuilder _dbb) {
         return _dbb.withCodecProvider(new CryptCodecProvider());
@@ -20,6 +23,10 @@ public final class CryptCodecUtil {
 
     /**
      * Configures a new CryptCodecProvider with the given password on the given DatabaseBuilder.
+     *
+     * @param _dbb the database builder to configure
+     * @param _password the password used to open the database, may be {@code null}
+     * @return the given database builder
      */
     public static DatabaseBuilder withCodecProvider(DatabaseBuilder _dbb, String _password) {
         return _dbb.withCodecProvider(new CryptCodecProvider(_password));

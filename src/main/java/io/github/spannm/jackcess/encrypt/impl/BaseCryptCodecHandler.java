@@ -44,13 +44,7 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
 
     private final PageChannel                channel;
     private final byte[]                     encodingKey;
-    private final KeyCache<CipherParameters> paramCache         =
-        new KeyCache<>() {
-            @Override
-            protected CipherParameters computeKey(int _pageNumber) {
-                return computeCipherParams(_pageNumber);
-            }
-        };
+    private KeyCache<CipherParameters>       paramCache;
     private TempBufferHolder                 tempBufH;
 
     protected BaseCryptCodecHandler(PageChannel _channel, byte[] _encodingKey) {
@@ -59,6 +53,14 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     protected CipherParameters getCipherParams(int _pageNumber) {
+        if (paramCache == null) {
+            paramCache = new KeyCache<>() {
+                @Override
+                protected CipherParameters computeKey(int _pageNum) {
+                    return computeCipherParams(_pageNum);
+                }
+            };
+        }
         return paramCache.get(_pageNumber);
     }
 

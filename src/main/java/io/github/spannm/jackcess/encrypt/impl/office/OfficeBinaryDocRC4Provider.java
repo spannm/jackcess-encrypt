@@ -11,7 +11,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class OfficeBinaryDocRC4Provider extends StreamCipherProvider {
+public final class OfficeBinaryDocRC4Provider extends StreamCipherProvider {
     private final byte[] encVerifier     = new byte[16];
     private final byte[] encVerifierHash = new byte[16];
     private final byte[] baseHash;

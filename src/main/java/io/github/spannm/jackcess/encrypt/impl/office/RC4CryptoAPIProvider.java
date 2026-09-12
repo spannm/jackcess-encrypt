@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class RC4CryptoAPIProvider extends StreamCipherProvider {
+public final class RC4CryptoAPIProvider extends StreamCipherProvider {
     private static final Set<EncryptionHeader.CryptoAlgorithm> VALID_CRYPTO_ALGOS = EnumSet.of(EncryptionHeader.CryptoAlgorithm.RC4);
     private static final Set<EncryptionHeader.HashAlgorithm>   VALID_HASH_ALGOS   = EnumSet.of(EncryptionHeader.HashAlgorithm.SHA1);
 

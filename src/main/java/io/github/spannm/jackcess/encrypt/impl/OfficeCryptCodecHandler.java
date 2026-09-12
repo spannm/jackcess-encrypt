@@ -125,7 +125,7 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
         return phase;
     }
 
-    protected Digest getDigest() {
+    protected final Digest getDigest() {
         if (digest == null) {
             digest = initDigest();
         }

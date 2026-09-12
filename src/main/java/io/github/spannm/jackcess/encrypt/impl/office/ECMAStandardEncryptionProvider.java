@@ -25,7 +25,8 @@ public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
     private final int                                          hashIterations;
     private final EncryptionHeader                             header;
     private final EncryptionVerifier                           verifier;
-    private final byte[]                                       baseHash;
+    private byte[]                                             pwdBytes;
+    private byte[]                                             baseHash;
     private final int                                          encKeyByteSize;
 
     public ECMAStandardEncryptionProvider(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _password) throws IOException {
@@ -42,8 +43,11 @@ public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
 
         verifier = new EncryptionVerifier(_encProvBuf, header.getCryptoAlgorithm());
 
-        // OC: 2.3.4.7 (part 1)
-        baseHash = hash(getDigest(), verifier.getSalt(), _password);
+        // OC: 2.3.4.7 (part 1) - deferred to getBaseHash(), computed lazily on
+        // first actual use rather than here, since this class is subclassed
+        // (NonStandardEncryptionProvider) and calling the overridable getDigest()
+        // from the constructor is not safe until the subclass is fully initialized
+        pwdBytes = _password;
         encKeyByteSize = bits2bytes(header.getKeySize());
     }
 
@@ -78,8 +82,16 @@ public class ECMAStandardEncryptionProvider extends BlockCipherProvider {
         return Arrays.equals(lverifierHash, ltestHash);
     }
 
+    private byte[] getBaseHash() {
+        if (baseHash == null) {
+            baseHash = hash(getDigest(), verifier.getSalt(), pwdBytes);
+            pwdBytes = null;
+        }
+        return baseHash;
+    }
+
     private KeyParameter computeEncryptionKey(byte[] _blockBytes) {
-        byte[] encKey = cryptDeriveKey(baseHash, _blockBytes, encKeyByteSize);
+        byte[] encKey = cryptDeriveKey(getBaseHash(), _blockBytes, encKeyByteSize);
         return new KeyParameter(encKey);
     }
 

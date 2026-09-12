@@ -15,7 +15,7 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class AgileEncryptionProvider extends BlockCipherProvider {
+public final class AgileEncryptionProvider extends BlockCipherProvider {
     private static final int             RESERVED_VAL             = 0x40;
     private static final byte[]          ENC_VERIFIER_INPUT_BLOCK = {(byte) 0xfe, (byte) 0xa7, (byte) 0xd2, (byte) 0x76, (byte) 0x3b, (byte) 0x4b, (byte) 0x9e, (byte) 0x79};
     private static final byte[]          ENC_VERIFIER_VALUE_BLOCK = {(byte) 0xd7, (byte) 0xaa, (byte) 0x0f, (byte) 0x6d, (byte) 0x30, (byte) 0x61, (byte) 0x34, (byte) 0x4e};

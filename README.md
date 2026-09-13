@@ -54,20 +54,20 @@ Add Jackcess Encrypt alongside Jackcess itself.
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess</artifactId>
-    <version>5.1.6</version>
+    <version>5.1.7</version>
 </dependency>
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess-encrypt</artifactId>
-    <version>5.1.5</version>
+    <version>5.1.6</version>
 </dependency>
 ```
 
 ### Gradle (Groovy / `build.gradle`)
 
 ```groovy
-implementation 'io.github.spannm:jackcess:5.1.6'
-implementation 'io.github.spannm:jackcess-encrypt:5.1.5'
+implementation 'io.github.spannm:jackcess:5.1.7'
+implementation 'io.github.spannm:jackcess-encrypt:5.1.6'
 ```
 
 ## 🚦 Usage Example

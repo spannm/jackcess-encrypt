@@ -10,6 +10,7 @@ import io.github.spannm.jackcess.encrypt.model.cert.CTCertificateKeyEncryptor;
 import io.github.spannm.jackcess.encrypt.model.cert.STCertificateKeyEncryptorUri;
 import io.github.spannm.jackcess.encrypt.model.password.CTPasswordKeyEncryptor;
 import io.github.spannm.jackcess.encrypt.model.password.STPasswordKeyEncryptorUri;
+import io.github.spannm.jackcess.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -18,12 +19,12 @@ import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -37,7 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * at runtime even though the model classes were generated from the corresponding schemas.
  */
 public final class XmlEncryptionParser {
-    private static final Logger         LOGGER                      = System.getLogger(XmlEncryptionParser.class.getName());
+    private static final Logger         LOGGER                   = Logger.getLogger(XmlEncryptionParser.class.getName());
 
     private static final String         ENC_NS                   = "http://schemas.microsoft.com/office/2006/encryption";
     private static final String         PWD_NS                   = "http://schemas.microsoft.com/office/2006/keyEncryptor/password";
@@ -203,7 +204,7 @@ public final class XmlEncryptionParser {
 
     private static long getLongAttribute(Element _el, String _localName) {
         String attrValue = _el.getAttribute(_localName);
-        if (attrValue == null || attrValue.isBlank()) {
+        if (StringUtil.isBlank(attrValue)) {
             throw createException(_localName, _el);
         }
         return Long.parseLong(attrValue.trim());
@@ -211,7 +212,7 @@ public final class XmlEncryptionParser {
 
     private static String getStringAttribute(Element _el, String _localName) {
         String attrValue = _el.getAttribute(_localName);
-        if (attrValue == null || attrValue.isBlank()) {
+        if (StringUtil.isBlank(attrValue)) {
             throw createException(_localName, _el);
         }
         return attrValue;
@@ -219,7 +220,7 @@ public final class XmlEncryptionParser {
 
     private static byte[] getBase64Attribute(Element _el, String _localName) {
         String attrValue = _el.getAttribute(_localName);
-        if (attrValue == null || attrValue.isBlank()) {
+        if (StringUtil.isBlank(attrValue)) {
             throw createException(_localName, _el);
         }
         return B64_DEC.decode(attrValue);

@@ -73,7 +73,7 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
      */
     protected CipherParameters getCipherParams(int _pageNumber) {
         if (paramCache == null) {
-            paramCache = new KeyCache<>() {
+            paramCache = new KeyCache<CipherParameters>() {
                 @Override
                 protected CipherParameters computeKey(int _pageNum) {
                     return computeCipherParams(_pageNum);

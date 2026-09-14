@@ -62,7 +62,7 @@ final class CryptCodecProviderExtraTest extends AbstractBaseTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.EmptyBlock")
+    @SuppressWarnings({"PMD.EmptyBlock", "try"})
     void unencryptedDatabaseUsesDummyHandler() throws Exception {
         File dbFile = createTempFile(getShortTestMethodName(), ".accdb", false);
 
@@ -76,7 +76,7 @@ final class CryptCodecProviderExtraTest extends AbstractBaseTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.EmptyBlock")
+    @SuppressWarnings({"PMD.EmptyBlock", "try"})
     void withCodecProviderExplicitNullPassword() throws Exception {
         File dbFile = createTempFile(getShortTestMethodName(), ".accdb", false);
 

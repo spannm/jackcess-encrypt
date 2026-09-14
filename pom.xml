@@ -59,8 +59,8 @@
         <connection>scm:git:ssh//git@github.com/${developerId}/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/${developerId}/${project.artifactId}.git</developerConnection>
         <url>https://github.com/${developerId}/${project.artifactId}/tree/master</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>Github</system>
@@ -116,6 +116,7 @@
         <dep.plugin.sortpom.version>4.0.0</dep.plugin.sortpom.version>
         <dep.plugin.cyclonedx.version>2.9.3</dep.plugin.cyclonedx.version>
         <dep.plugin.versions.version>2.22.0</dep.plugin.versions.version>
+        <dep.plugin.figlet.version>1.0.0</dep.plugin.figlet.version>
 
         <basepom.deploy.snapshot.url>https://central.sonatype.com/repository/maven-snapshots/</basepom.deploy.snapshot.url>
 
@@ -312,6 +313,13 @@
                     <groupId>org.cyclonedx</groupId>
                     <artifactId>cyclonedx-maven-plugin</artifactId>
                     <version>${dep.plugin.cyclonedx.version}</version>
+                    <configuration>
+                        <projectType>library</projectType>
+                        <skipNotDeployed>false</skipNotDeployed>
+                        <outputFormat>xml</outputFormat>
+                        <outputName>sbom</outputName>
+                        <verbose>false</verbose>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>cyclonedx-makebom</id>
@@ -321,13 +329,6 @@
                             <phase>package</phase>
                         </execution>
                     </executions>
-                    <configuration>
-                        <projectType>library</projectType>
-                        <skipNotDeployed>false</skipNotDeployed>
-                        <outputFormat>xml</outputFormat>
-                        <outputName>sbom</outputName>
-                        <verbose>false</verbose>
-                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -361,6 +362,26 @@
         </pluginManagement>
 
         <plugins>
+
+            <plugin>
+                <groupId>io.github.spannm</groupId>
+                <artifactId>figlet-maven-plugin</artifactId>
+                <version>${dep.plugin.figlet.version}</version>
+                <configuration>
+                    <content><![CDATA[
+                         <lineBreak/><lineBreak/>
+                         <figletFont name="slant">${project.name}</figletFont>
+                         <preserveWhitespace>    v${project.version}</preserveWhitespace><lineBreak/>
+                     ]]></content>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>render</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <!-- central-publishing-maven-plugin is the official tool for publishing artifacts to the new Sonatype Central Portal -->

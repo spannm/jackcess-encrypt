@@ -17,7 +17,7 @@
         This project is separate from the main Jackcess project for two main
         reasons:
         <ul>
-          <li>The encryption support requires an the (<a href="http://www.bouncycastle.org/">Bouncy Castle</a>) library.
+          <li>The encryption support requires the <a href="https://www.bouncycastle.org/">Bouncy Castle</a> library.
               Making this support separate from the main Jackcess library
               allows users to avoid including unnecessary libraries.
           </li>
@@ -38,6 +38,14 @@
           </li>
         </ul>
       </p>
+
+      <subsection name="Java 8 (5.1.7)">
+        <p>
+          As of version 5.1.7 the produced bytecode targets Java 8 again, matching
+          <a href="https://github.com/spannm/jackcess/">Jackcess</a> 5.1.8, which is the
+          minimum Jackcess version required.  Building the project still requires JDK 17 or later.
+        </p>
+      </subsection>
 
       <subsection name="Fork, Java 11, new Maven coordinates (2025-02-16)">
         <p>

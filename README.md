@@ -12,7 +12,7 @@
 
 **Jackcess Encrypt** is an add-on library for [**Jackcess**](https://github.com/spannm/jackcess), the pure Java API for Microsoft Access databases. It adds support for reading and writing encrypted/password-protected `.mdb`, `.accdb` and Microsoft Money (`.mny`) files.
 
-Jackcess itself deliberately ships without this functionality — the encryption schemes used by Access and Money rely on cryptographic primitives that are more sensibly maintained in a separate module with its own dependency on [Bouncy Castle](https://www.bouncycastle.org/). This project supplies that missing piece as a `CodecProvider` that plugs directly into Jackcess.
+Jackcess itself deliberately ships without this functionality, as the encryption schemes used by Access and Money rely on cryptographic primitives that are more sensibly maintained in a separate module with its own dependency on [Bouncy Castle](https://www.bouncycastle.org/). This project supplies that missing piece as a `CodecProvider` that plugs directly into Jackcess.
 
 Jackcess Encrypt is not an application. There is no GUI. It's a library, intended for other developers to build Java applications on top of Jackcess.
 
@@ -20,7 +20,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 ## ✨ Key Features
 
-* **Drop-in Codec**: Implements Jackcess's `CodecProvider` SPI — plug it into `DatabaseBuilder` and encrypted files just open.
+* **Drop-in Codec**: Implements Jackcess's `CodecProvider` SPI. Plug it into `DatabaseBuilder` and encrypted files just open.
 
 * **Broad Format Coverage**: Supports classic Jet/MSISAM RC4 obfuscation, the RC4 CryptoAPI and binary document RC4 schemes, as well as modern Office/ECMA-376 standard and agile encryption (AES) used by `.accdb`. Extensible ("external provider") encryption is not supported, as it relies on arbitrary third-party providers.
 
@@ -32,7 +32,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 ## 🛠 Tech Stack & Dependencies
 
-* **Java Version**: 11 or higher at runtime (LTS versions like Java 17 and 21 are fully supported and tested). Building the project itself requires JDK 17 or higher.
+* **Java Version**: 8 or higher at runtime. As of 5.1.7 Jackcess Encrypt runs on Java 8 again (versions 5.1.0 to 5.1.6 required Java 11), together with Jackcess 5.1.8 or later. LTS versions like Java 17 and 21 are fully supported and tested. Building the project itself requires JDK 17 or higher.
 
 * **Main Dependencies**:
   * [Jackcess](https://github.com/spannm/jackcess) (the base library this project extends)
@@ -54,20 +54,20 @@ Add Jackcess Encrypt alongside Jackcess itself.
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess</artifactId>
-    <version>5.1.7</version>
+    <version>5.1.8</version>
 </dependency>
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess-encrypt</artifactId>
-    <version>5.1.6</version>
+    <version>5.1.7</version>
 </dependency>
 ```
 
 ### Gradle (Groovy / `build.gradle`)
 
 ```groovy
-implementation 'io.github.spannm:jackcess:5.1.7'
-implementation 'io.github.spannm:jackcess-encrypt:5.1.6'
+implementation 'io.github.spannm:jackcess:5.1.8'
+implementation 'io.github.spannm:jackcess-encrypt:5.1.7'
 ```
 
 ## 🚦 Usage Example
@@ -92,11 +92,11 @@ try (Database db = new DatabaseBuilder()
 }
 ```
 
-Not every "encrypted" Access file actually requires a password — many older formats merely obfuscate the data with a key stored in the file itself. In that case `CryptCodecProvider` works without any password at all.
+Not every "encrypted" Access file actually requires a password. Many older formats merely obfuscate the data with a key stored in the file itself. In that case `CryptCodecProvider` works without any password at all.
 
 ## ❤️ Origin & Maintenance
 
-This project was forked from the original [Jackcess Encrypt project on SourceForge](https://sourceforge.net/projects/jackcessencrypt/), and is maintained as a companion to [Jackcess](https://github.com/spannm/jackcess) — the two projects are versioned and released in lockstep.
+This project was forked from the original [Jackcess Encrypt project on SourceForge](https://sourceforge.net/projects/jackcessencrypt/), and is maintained as a companion to [Jackcess](https://github.com/spannm/jackcess). The two projects are released together, although their version numbers are independent.
 
 ### ⚖️ License
 

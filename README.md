@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/maven-central/last-update/io.github.spannm/jackcess-encrypt?label=Updated&style=flat-square&color=blue" alt="Maven Central Last Update">
   <a href="https://github.com/spannm/jackcess-encrypt/stargazers"><img src="https://img.shields.io/github/stars/spannm/jackcess-encrypt?logo=github&label=&logoColor=white&labelColor=555555&color=007ec6&style=flat-square" alt="GitHub Stars"></a>
   <br>
-  <a href="https://github.com/spannm/jackcess-encrypt/actions/workflows/ci_jdk21_ubuntu.yml"><img src="https://img.shields.io/github/actions/workflow/status/spannm/jackcess-encrypt/ci_jdk21_ubuntu.yml?label=Build&style=flat-square" alt="GitHub Actions Workflow Status"></a>
+  <a href="https://github.com/spannm/jackcess-encrypt/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/spannm/jackcess-encrypt/ci.yml?label=Build&style=flat-square" alt="GitHub Actions Workflow Status"></a>
   <a href="https://javadoc.io/doc/io.github.spannm/jackcess-encrypt"><img src="https://javadoc.io/badge2/io.github.spannm/jackcess-encrypt/javadoc.svg?style=flat-square" alt="Javadoc"></a>
 </div>
 
@@ -32,7 +32,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 ## 🛠 Tech Stack & Dependencies
 
-* **Java Version**: 8 or higher at runtime. As of 5.1.7 Jackcess Encrypt runs on Java 8 again (versions 5.1.0 to 5.1.6 required Java 11), together with Jackcess 5.1.8 or later. LTS versions like Java 17 and 21 are fully supported and tested. Building the project itself requires JDK 17 or higher.
+* **Java Version**: 8 or higher at runtime. As of 5.1.7 Jackcess Encrypt runs on Java 8 again (versions 5.1.0 to 5.1.6 required Java 11), together with Jackcess 5.1.8 or later. LTS versions like Java 17 and 21 are fully supported and tested. Building the project itself requires JDK 21 or higher.
 
 * **Main Dependencies**:
   * [Jackcess](https://github.com/spannm/jackcess) (the base library this project extends)

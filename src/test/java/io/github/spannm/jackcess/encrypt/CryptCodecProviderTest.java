@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -346,10 +347,12 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     }
 
     static void checkCryptoStrength() {
-        boolean unlimitedCrypto = false;
+        boolean unlimitedCrypto;
         try {
             unlimitedCrypto = javax.crypto.Cipher.getMaxAllowedKeyLength("AES") > 256;
-        } catch (Exception _ex) {}
+        } catch (NoSuchAlgorithmException _ex) {
+            unlimitedCrypto = false;
+        }
         System.out.println("Unlimited strength cryptography: " + unlimitedCrypto);
     }
 }

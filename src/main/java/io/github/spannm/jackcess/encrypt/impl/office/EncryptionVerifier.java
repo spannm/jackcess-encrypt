@@ -42,6 +42,8 @@ public class EncryptionVerifier {
     }
 
     /**
+     * Returns the size of the salt in bytes.
+     *
      * @return the size of the salt in bytes
      */
     public int getSaltSize() {
@@ -49,6 +51,8 @@ public class EncryptionVerifier {
     }
 
     /**
+     * Returns the salt used for key derivation.
+     *
      * @return the salt used for key derivation
      */
     public byte[] getSalt() {
@@ -56,6 +60,8 @@ public class EncryptionVerifier {
     }
 
     /**
+     * Returns the encrypted verifier bytes.
+     *
      * @return the encrypted verifier bytes
      */
     public byte[] getEncryptedVerifier() {
@@ -63,6 +69,8 @@ public class EncryptionVerifier {
     }
 
     /**
+     * Returns the size of the (unencrypted) verifier hash in bytes.
+     *
      * @return the size of the (unencrypted) verifier hash in bytes
      */
     public int getVerifierHashSize() {
@@ -70,6 +78,8 @@ public class EncryptionVerifier {
     }
 
     /**
+     * Returns the encrypted hash of the verifier bytes.
+     *
      * @return the encrypted hash of the verifier bytes
      */
     public byte[] getEncryptedVerifierHash() {

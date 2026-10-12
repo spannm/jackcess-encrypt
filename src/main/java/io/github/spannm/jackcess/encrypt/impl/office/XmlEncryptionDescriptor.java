@@ -20,6 +20,8 @@ import org.bouncycastle.crypto.modes.GCMBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
+import java.util.Locale;
+
 /**
  * Utility for working with the xml encryption descriptor of agile encryption (OC: 2.3.4.10).
  * Parsing is delegated to {@link XmlEncryptionParser}; this class additionally maps the algorithm
@@ -55,6 +57,8 @@ public final class XmlEncryptionDescriptor {
         }
 
         /**
+         * Returns a new, uninitialized cipher instance for this algorithm.
+         *
          * @return a new, uninitialized cipher instance for this algorithm
          */
         public BlockCipher initBlockCipher() {
@@ -139,6 +143,8 @@ public final class XmlEncryptionDescriptor {
         }
 
         /**
+         * Returns a new digest instance for this algorithm.
+         *
          * @return a new digest instance for this algorithm
          */
         public Digest initDigest() {
@@ -200,8 +206,8 @@ public final class XmlEncryptionDescriptor {
     private static <E extends Enum<E>> E parseEnum(String _str, Class<E> _enumClazz) {
         String origStr = _str;
         // massage the enum str a bit to be a valid enum
-        _str = _str.trim().toUpperCase().replaceAll("[-_]", "");
-        if ((!_str.isEmpty()) && Character.isDigit(_str.charAt(0))) {
+        _str = _str.trim().toUpperCase(Locale.ROOT).replaceAll("[-_]", "");
+        if (!_str.isEmpty() && Character.isDigit(_str.charAt(0))) {
             _str = '_' + _str;
         }
         try {
@@ -291,7 +297,7 @@ public final class XmlEncryptionDescriptor {
         }
     }
 
-    private static class BlockCipherAdapter implements BlockCipher {
+    static class BlockCipherAdapter implements BlockCipher {
         private final StreamCipherCompat cipher;
 
         private BlockCipherAdapter(StreamCipherCompat _cipher) {

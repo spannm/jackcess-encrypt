@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 /**
@@ -136,7 +137,7 @@ public class MSISAMCryptCodecHandler extends BaseJetCryptCodecHandler {
         byte[] passwordBytes = new byte[PASSWORD_LENGTH];
 
         if (_password != null) {
-            ByteBuffer bb = ColumnImpl.encodeUncompressedText(_password.toUpperCase(), _charset);
+            ByteBuffer bb = ColumnImpl.encodeUncompressedText(_password.toUpperCase(Locale.getDefault()), _charset);
             bb.get(passwordBytes, 0, Math.min(passwordBytes.length, bb.remaining()));
         }
 

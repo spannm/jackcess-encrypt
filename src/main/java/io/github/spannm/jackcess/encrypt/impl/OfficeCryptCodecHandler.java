@@ -168,6 +168,8 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
     }
 
     /**
+     * Returns the phase this handler is currently in.
+     *
      * @return the phase this handler is currently in
      */
     protected Phase getPhase() {
@@ -301,6 +303,8 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
     }
 
     /**
+     * Returns the corresponding number of bytes.
+     *
      * @param _bits a number of bits
      * @return the corresponding number of bytes
      */

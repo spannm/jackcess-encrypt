@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -192,11 +191,8 @@ public final class XmlEncryptionParser {
 
     private static List<Element> getElements(Element _parentEl, String _localName, String _ns) {
         NodeList list = _parentEl.getElementsByTagNameNS(_ns, _localName);
-        if ((list == null) || (list.getLength() == 0)) {
-            return Collections.emptyList();
-        }
         List<Element> els = new ArrayList<>();
-        for (int i = 0; i < list.getLength(); ++i) {
+        for (int i = 0; list != null && i < list.getLength(); ++i) {
             els.add((Element) list.item(i));
         }
         return els;

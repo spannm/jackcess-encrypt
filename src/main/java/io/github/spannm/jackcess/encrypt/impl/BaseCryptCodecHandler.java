@@ -84,6 +84,8 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Returns the database specific encoding key, may be {@code null}.
+     *
      * @return the database specific encoding key, may be {@code null}
      */
     protected byte[] getEncodingKey() {
@@ -412,6 +414,8 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Returns a byte array of the given length, truncating or padding the given byte array as necessary.
+     *
      * @param _bytes the source bytes
      * @param _len the desired length
      * @return a byte array of the given length, truncating or padding the given
@@ -422,6 +426,9 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Returns a byte array of the given length, truncating or padding the given byte array as necessary using the given
+     * padByte.
+     *
      * @param _bytes the source bytes
      * @param _len the desired length
      * @param _padByte the byte value used for padding
@@ -441,6 +448,8 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Returns a new ByteBuffer wrapping the given bytes with the appropriate byte order.
+     *
      * @param _bytes the bytes to wrap
      * @return a new ByteBuffer wrapping the given bytes with the appropriate
      *         byte order
@@ -478,6 +487,8 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Returns {@code true} if the given bytes are all 0, {@code false} otherwise.
+     *
      * @param _key the key bytes to test
      * @return {@code true} if the given bytes are all 0, {@code false}
      *         otherwise

@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -72,6 +73,8 @@ public class EncryptionHeader {
         }
 
         /**
+         * Returns the algorithm id used in the encryption header.
+         *
          * @return the algorithm id used in the encryption header
          */
         public int getAlgId() {
@@ -79,6 +82,8 @@ public class EncryptionHeader {
         }
 
         /**
+         * Returns the smallest key size (in bits) supported by this algorithm, which doubles as the default key size.
+         *
          * @return the smallest key size (in bits) supported by this algorithm, which doubles as the
          *         default key size
          */
@@ -87,6 +92,8 @@ public class EncryptionHeader {
         }
 
         /**
+         * Returns the length (in bytes) of the encrypted verifier hash of this algorithm.
+         *
          * @return the length (in bytes) of the encrypted verifier hash of this algorithm
          */
         public int getEncryptedVerifierHashLen() {
@@ -94,6 +101,8 @@ public class EncryptionHeader {
         }
 
         /**
+         * Returns {@code true} if the given key size is supported by this algorithm.
+         *
          * @param _keySize a key size in bits
          * @return {@code true} if the given key size is supported by this algorithm
          */
@@ -116,6 +125,8 @@ public class EncryptionHeader {
         }
 
         /**
+         * Returns the algorithm id used in the encryption header.
+         *
          * @return the algorithm id used in the encryption header
          */
         public int getAlgId() {
@@ -162,6 +173,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the header flags, see the {@code F*_FLAG} constants.
+     *
      * @return the header flags, see the {@code F*_FLAG} constants
      */
     public int getFlags() {
@@ -169,6 +182,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the size of the extra data of the header (unused, reserved by the specification).
+     *
      * @return the size of the extra data of the header (unused, reserved by the specification)
      */
     public int getSizeExtra() {
@@ -176,6 +191,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the encryption algorithm used by the database.
+     *
      * @return the encryption algorithm used by the database
      */
     public CryptoAlgorithm getCryptoAlgorithm() {
@@ -183,6 +200,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the hash algorithm used by the database.
+     *
      * @return the hash algorithm used by the database
      */
     public HashAlgorithm getHashAlgorithm() {
@@ -190,6 +209,9 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the key size in bits, resolved to the algorithm/provider default if the header contained no explicit
+     * size.
+     *
      * @return the key size in bits, resolved to the algorithm/provider default if the header
      *         contained no explicit size
      */
@@ -198,6 +220,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the crypto service provider type.
+     *
      * @return the crypto service provider type
      */
     public int getProviderType() {
@@ -205,6 +229,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns the name of the crypto service provider, empty if the header contained none.
+     *
      * @return the name of the crypto service provider, empty if the header contained none
      */
     public String getCspName() {
@@ -317,7 +343,7 @@ public class EncryptionHeader {
             // provider name was not given, or contains the string " base " use the
             // Base provider default. otherwise, use the Strong provider default.
             // CSPs: http://msdn.microsoft.com/en-us/library/windows/desktop/bb931357%28v=vs.85%29.aspx
-            _cspName = _cspName.trim().toLowerCase();
+            _cspName = _cspName.trim().toLowerCase(Locale.ROOT);
             return _cspName.isEmpty() || _cspName.contains(CSP_BASE_STRING) ? RC4_BASE_DEFAULT_KEY_SIZE : RC4_STRONG_DEFAULT_KEY_SIZE;
         }
 
@@ -350,6 +376,8 @@ public class EncryptionHeader {
     }
 
     /**
+     * Returns {@code true} if the given flag is set.
+     *
      * @param flagsVal the flags value to test
      * @param flagMask the flag to test for
      * @return {@code true} if the given flag is set

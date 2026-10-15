@@ -42,20 +42,26 @@
     <module name="TreeWalker">
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
+        <module name="AvoidStarImport"/>
         <module name="CatchParameterName">
             <property name="format" value="^_(ex[a-zA-Z0-9]*)|([a-z][a-zA-Z0-9]*Exception|ignored)$"/>
         </module>
         <module name="ConstantName"/>
-        <module name="DeclarationOrder"/>
+        <!--module name="DeclarationOrder"/-->
         <module name="EmptyBlock"/>
         <module name="EmptyForInitializerPad"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EmptyStatement"/>
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
-        <module name="GenericWhitespace"/>
+        <module name="FallThrough"/>
         <module name="FinalClass"/>
-        <module name="HiddenField"/>
+        <module name="GenericWhitespace"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="setterCanReturnItsClass" value="true"/>
+        </module>
         <module name="HideUtilityClassConstructor"/>
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
@@ -68,9 +74,9 @@
             <property name="staticGroups" value="/^(?!javaf?x?\.).+/,java,javax"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
         </module>
-        <!--module name="InnerAssignment" /-->
-        <!--module name="InnerTypeLast" /-->
-        <!--module name="InterfaceIsType" /-->
+        <module name="InnerAssignment"/>
+        <!--module name="InnerTypeLast"/-->
+        <module name="InterfaceIsType"/>
         <!--module name="JavadocStyle"/--> <!-- removed: not resolvable by every Checkstyle engine version (e.g. Eclipse's bundled eclipse-cs) -->
         <module name="LeftCurly"/>
         <module name="LocalFinalVariableName">
@@ -79,9 +85,7 @@
         <module name="LocalVariableName">
             <property name="format" value="(^[a-z][a-zA-Z0-9]*$)|(^[ijk]$)"/>
         </module>
-        <module name="MemberName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$" />
-        </module>
+        <!--module name="MemberName"/-->
         <module name="MethodLength">
             <property name="max" value="400"/>
             <property name="countEmpty" value="false"/>
@@ -92,6 +96,7 @@
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifierOrder"/>
+        <module name="MultipleVariableDeclarations"/>
         <module name="MutableException"/>
         <module name="NeedBraces"/>
         <module name="NoClone"/>
@@ -102,14 +107,15 @@
         <module name="OneTopLevelClass"/>
         <module name="OperatorWrap"/>
         <module name="OuterTypeFilename"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
         <module name="PackageName"/>
-        <module name="ParameterAssignment"/>
-        <!-- module name="ParameterName">
+        <!--module name="ParameterAssignment"/-->
+        <!--module name="ParameterName">
             <property name="format" value="(?:^_[a-zA-Z0-9]*$)"/>
-        </module -->
-        <module name="ParameterNumber">
+        </module-->
+        <!--module name="ParameterNumber">
             <property name="max" value="10"/>
-        </module>
+        </module-->
         <module name="ParenPad"/>
         <module name="RedundantImport"/>
         <module name="RedundantModifier"/>
@@ -122,7 +128,7 @@
         <module name="SuperFinalize"/>
         <module name="SuppressWarningsHolder"/>
         <module name="SuppressionCommentFilter"/>
-        <module name="TodoComment"/>
+        <!--module name="TodoComment"/-->
         <module name="TypeName"/>
         <!--module name="TypeName">
             <property name="format" value="^([A-Z][a-zA-Z0-9]+IF|I[A-Z][a-zA-Z0-9]+)$"/>
@@ -140,7 +146,7 @@
         <!--module name="VariableDeclarationUsageDistance">
             <property name="allowedDistance" value="10"/>
         </module-->
-        <module name="VisibilityModifier"/>
+        <!--module name="VisibilityModifier"/-->
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">
             <property name="allowEmptyCatches" value="true"/>

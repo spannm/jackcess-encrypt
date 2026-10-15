@@ -131,7 +131,7 @@ public final class XmlEncryptionParser {
         String typeUri = getStringAttribute(_keyEncryptorEl, "uri");
         keyEncryptor.setUri(typeUri);
 
-        Object encryptor = null;
+        Object encryptor;
         if (STPasswordKeyEncryptorUri.HTTP_SCHEMAS_MICROSOFT_COM_OFFICE_2006_KEY_ENCRYPTOR_PASSWORD.value().equals(typeUri)) {
             encryptor = parsePasswordKeyEncryptor(_keyEncryptorEl);
         } else if (STCertificateKeyEncryptorUri.HTTP_SCHEMAS_MICROSOFT_COM_OFFICE_2006_KEY_ENCRYPTOR_CERTIFICATE.value().equals(typeUri)) {

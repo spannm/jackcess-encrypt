@@ -20,7 +20,7 @@ public abstract class StreamCipherFactory {
         try {
             // first, attempt to load a 1.51+ compatible factory instance
             factory = loadFactory("io.github.spannm.jackcess.encrypt.util.RC4EngineCompat$Factory");
-        } catch (Throwable _ex) {
+        } catch (Throwable ignored) {
             // failed, try legacy version
         }
 

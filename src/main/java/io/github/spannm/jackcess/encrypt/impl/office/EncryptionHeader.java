@@ -257,7 +257,7 @@ public class EncryptionHeader {
         int startPos = encProvBuf.position();
         encProvBuf.limit(startPos + headerLen);
 
-        EncryptionHeader header = null;
+        EncryptionHeader header;
         try {
             header = new EncryptionHeader(encProvBuf);
 

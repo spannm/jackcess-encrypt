@@ -93,6 +93,16 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
+     * Gets the encoding key combined with the given page number.
+     *
+     * @param pageNumber the database page number
+     * @return a new array with the page number applied to the encoding key
+     */
+    protected byte[] getEncodingKey(int pageNumber) {
+        return applyPageNumber(getEncodingKey(), 0, pageNumber);
+    }
+
+    /**
      * Returns the stream cipher used by this handler.
      *
      * @return the stream cipher instance
@@ -221,18 +231,6 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
-     * Inits the given cipher for encryption with the given params.
-     *
-     * @param cipher the cipher to initialize
-     * @param params the cipher parameters (key and, if applicable, IV)
-     * @return the given cipher
-     */
-    protected static StreamCipherCompat encryptInit(StreamCipherCompat cipher, CipherParameters params) {
-        cipher.init(CIPHER_ENCRYPT_MODE, params);
-        return cipher;
-    }
-
-    /**
      * Inits the given cipher for decryption with the given params.
      *
      * @param cipher the cipher to initialize
@@ -241,6 +239,18 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
      */
     protected static BufferedBlockCipher decryptInit(BufferedBlockCipher cipher, CipherParameters params) {
         cipher.init(CIPHER_DECRYPT_MODE, params);
+        return cipher;
+    }
+
+    /**
+     * Inits the given cipher for encryption with the given params.
+     *
+     * @param cipher the cipher to initialize
+     * @param params the cipher parameters (key and, if applicable, IV)
+     * @return the given cipher
+     */
+    protected static StreamCipherCompat encryptInit(StreamCipherCompat cipher, CipherParameters params) {
+        cipher.init(CIPHER_ENCRYPT_MODE, params);
         return cipher;
     }
 
@@ -270,20 +280,6 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
-     * Decrypts the given bytes using a block cipher configured with the given
-     * key and IV into a new byte[].
-     *
-     * @param keyBytes the cipher key
-     * @param iv the initialization vector
-     * @param encBytes the encrypted bytes
-     * @return a new array with the decrypted bytes
-     */
-    protected byte[] blockDecryptBytes(byte[] keyBytes, byte[] iv, byte[] encBytes) {
-        BufferedBlockCipher cipher = decryptInit(getBlockCipher(), new ParametersWithIV(new KeyParameter(keyBytes), iv));
-        return decryptBytes(cipher, encBytes);
-    }
-
-    /**
      * Decrypts the given bytes using a block cipher into a new byte[].
      *
      * @param _cipher the initialized block cipher
@@ -300,13 +296,17 @@ public abstract class BaseCryptCodecHandler implements CodecHandler {
     }
 
     /**
-     * Gets the encoding key combined with the given page number.
+     * Decrypts the given bytes using a block cipher configured with the given
+     * key and IV into a new byte[].
      *
-     * @param pageNumber the database page number
-     * @return a new array with the page number applied to the encoding key
+     * @param keyBytes the cipher key
+     * @param iv the initialization vector
+     * @param encBytes the encrypted bytes
+     * @return a new array with the decrypted bytes
      */
-    protected byte[] getEncodingKey(int pageNumber) {
-        return applyPageNumber(getEncodingKey(), 0, pageNumber);
+    protected byte[] blockDecryptBytes(byte[] keyBytes, byte[] iv, byte[] encBytes) {
+        BufferedBlockCipher cipher = decryptInit(getBlockCipher(), new ParametersWithIV(new KeyParameter(keyBytes), iv));
+        return decryptBytes(cipher, encBytes);
     }
 
     /**

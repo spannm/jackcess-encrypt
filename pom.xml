@@ -56,7 +56,7 @@
     </contributors>
 
     <scm>
-        <connection>scm:git:ssh//git@github.com/${developerId}/${project.artifactId}.git</connection>
+        <connection>scm:git:ssh://git@github.com/${developerId}/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/${developerId}/${project.artifactId}.git</developerConnection>
         <url>https://github.com/${developerId}/${project.artifactId}/tree/master</url>
         <tag>HEAD</tag>

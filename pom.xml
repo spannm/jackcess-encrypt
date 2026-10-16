@@ -115,8 +115,8 @@
         <!-- additional plugins not defined in parent -->
         <dep.plugin.sortpom.version>4.0.0</dep.plugin.sortpom.version>
         <dep.plugin.cyclonedx.version>2.9.3</dep.plugin.cyclonedx.version>
-        <dep.plugin.versions.version>2.22.0</dep.plugin.versions.version>
-        <dep.plugin.figlet.version>1.0.0</dep.plugin.figlet.version>
+        <dep.plugin.versions.version>2.23.0</dep.plugin.versions.version>
+        <dep.plugin.figlet.version>1.1.0</dep.plugin.figlet.version>
         <dep.plugin.error-prone.version>2.50.0</dep.plugin.error-prone.version>
 
         <basepom.deploy.snapshot.url>https://central.sonatype.com/repository/maven-snapshots/</basepom.deploy.snapshot.url>
@@ -131,7 +131,6 @@
         <check.pmd.ruleset>${project.rootDirectory}/build/pmd-rules.xml</check.pmd.ruleset>
         <dep.pmd.version>7.28.0</dep.pmd.version>
         <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
-        <dep.spotbugs.version>4.10.4</dep.spotbugs.version>
         <basepom.check.skip-dependency>false</basepom.check.skip-dependency>
         <basepom.check.fail-dependency>false</basepom.check.fail-dependency>
         <basepom.check.skip-license>true</basepom.check.skip-license>
@@ -373,9 +372,10 @@
                 <version>${dep.plugin.figlet.version}</version>
                 <configuration>
                     <content><![CDATA[
-                         <lineBreak/><lineBreak/>
-                         <figletFont name="slant">${project.name}</figletFont>
-                         <preserveWhitespace>    v${project.version}</preserveWhitespace><lineBreak/>
+                         <lineBreak/>
+                         <figletFont name="slant"> Jackcess</figletFont>
+                         <figletFont name="slant"> Encrypt</figletFont>
+                         <preserveWhitespace>        v${project.version}</preserveWhitespace><lineBreak/>
                      ]]></content>
                 </configuration>
                 <executions>

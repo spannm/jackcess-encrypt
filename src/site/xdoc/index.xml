@@ -39,11 +39,11 @@
         </ul>
       </p>
 
-      <subsection name="Java 8 (5.1.7)">
+      <subsection name="Java 8 (5.2.0)">
         <p>
-          As of version 5.1.7 the produced bytecode targets Java 8 again, matching
-          <a href="https://github.com/spannm/jackcess/">Jackcess</a> 5.1.8, which is the
-          minimum Jackcess version required.  Building the project still requires JDK 17 or later.
+          As of version 5.2.0 the produced bytecode targets Java 8 again, matching
+          <a href="https://github.com/spannm/jackcess/">Jackcess</a> 5.2.0, which is the
+          minimum Jackcess version required.  Building the project still requires JDK 21 or later.
         </p>
       </subsection>
 

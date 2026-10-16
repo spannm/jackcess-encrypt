@@ -32,7 +32,7 @@ Jackcess Encrypt is not an application. There is no GUI. It's a library, intende
 
 ## 🛠 Tech Stack & Dependencies
 
-* **Java Version**: 8 or higher at runtime. As of 5.1.7 Jackcess Encrypt runs on Java 8 again (versions 5.1.0 to 5.1.6 required Java 11), together with Jackcess 5.1.8 or later. LTS versions like Java 17 and 21 are fully supported and tested. Building the project itself requires JDK 21 or higher.
+* **Java Version**: 8 or higher at runtime. As of 5.2.0 Jackcess Encrypt runs on Java 8 again (versions 5.1.0 to 5.1.6 required Java 11), together with Jackcess 5.2.0 or later. LTS versions like Java 17 and 21 are fully supported and tested. Building the project itself requires JDK 21 or higher.
 
 * **Main Dependencies**:
   * [Jackcess](https://github.com/spannm/jackcess) (the base library this project extends)
@@ -54,20 +54,20 @@ Add Jackcess Encrypt alongside Jackcess itself.
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess</artifactId>
-    <version>5.1.8</version>
+    <version>5.2.0</version>
 </dependency>
 <dependency>
     <groupId>io.github.spannm</groupId>
     <artifactId>jackcess-encrypt</artifactId>
-    <version>5.1.7</version>
+    <version>5.2.0</version>
 </dependency>
 ```
 
 ### Gradle (Groovy / `build.gradle`)
 
 ```groovy
-implementation 'io.github.spannm:jackcess:5.1.8'
-implementation 'io.github.spannm:jackcess-encrypt:5.1.7'
+implementation 'io.github.spannm:jackcess:5.2.0'
+implementation 'io.github.spannm:jackcess-encrypt:5.2.0'
 ```
 
 ## 🚦 Usage Example

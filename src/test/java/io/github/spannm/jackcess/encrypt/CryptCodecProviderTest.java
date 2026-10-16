@@ -5,6 +5,7 @@ import static io.github.spannm.jackcess.test.TestUtil.createExpectedRow;
 import static io.github.spannm.jackcess.test.TestUtil.createExpectedTable;
 import static io.github.spannm.jackcess.test.TestUtil.createTempFile;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.spannm.jackcess.Database;
 import io.github.spannm.jackcess.DatabaseBuilder;
@@ -32,8 +33,8 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ValueSource(strings = {"src/test/resources/data/money2001.mny", "src/test/resources/data/money2001-pwd.mny"})
     void msisam2001(String dbFileName) throws Exception {
 
-        assertThrows(UnsupportedOperationException.class,
-            () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
+        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+            .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
             doCheckMSISAM2001Db(db);
@@ -59,11 +60,9 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/money2008-pwd.mny"})
     void msisam2008Password(String dbFileName) throws Exception {
-        IllegalStateException ex1 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, null));
-        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(dbFileName, true, null)).isInstanceOf(IllegalStateException.class).hasMessage("Incorrect password provided");
 
-        IllegalStateException ex2 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, "WrongPassword"));
-        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(dbFileName, true, "WrongPassword")).isInstanceOf(IllegalStateException.class).hasMessage("Incorrect password provided");
 
         try (Database db = open(dbFileName, true, "Test12345")) {
             doCheckMSISAM2008Db(db);
@@ -73,8 +72,8 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db-enc.mdb"})
     void readJet2000(String dbFileName) throws Exception {
-        assertThrows(UnsupportedOperationException.class,
-            () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
+        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+            .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
             assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.V2000);
@@ -86,8 +85,8 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db97-enc.mdb"})
     void readJet1997(String dbFileName) throws Exception {
-        assertThrows(UnsupportedOperationException.class,
-            () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
+        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+            .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
             assertThat(db.getFileFormat()).isEqualTo(Database.FileFormat.V1997);
@@ -119,14 +118,12 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db2007-oldenc.accdb", "src/test/resources/data/db2007-enc.accdb"})
     void readOfficeEnc(String dbFileName) throws Exception {
-        assertThrows(UnsupportedOperationException.class,
-            () -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open());
+        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+            .isInstanceOf(UnsupportedOperationException.class);
 
-        IllegalStateException ex1 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, null));
-        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(dbFileName, true, null)).isInstanceOf(IllegalStateException.class).hasMessage("Incorrect password provided");
 
-        IllegalStateException ex2 = assertThrows(IllegalStateException.class, () -> open(dbFileName, true, "WrongPassword"));
-        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(dbFileName, true, "WrongPassword")).isInstanceOf(IllegalStateException.class).hasMessage("Incorrect password provided");
 
         try (Database db = open(dbFileName, true, "Test123")) {
             db.getSystemTable("MSysQueries");
@@ -198,13 +195,12 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     void nonStandardProvider() throws Exception {
         String fname = "src/test/resources/data/db-nonstandard.accdb";
 
-        assertThrows(UnsupportedOperationException.class, () -> new DatabaseBuilder().withFile(new File(fname)).withReadOnly(true).open());
+        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(fname)).withReadOnly(true).open())
+            .isInstanceOf(UnsupportedOperationException.class);
 
-        InvalidCredentialsException ex1 = assertThrows(InvalidCredentialsException.class, () -> open(fname, true, null));
-        assertThat(ex1.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(fname, true, null)).isInstanceOf(InvalidCredentialsException.class).hasMessage("Incorrect password provided");
 
-        InvalidCredentialsException ex2 = assertThrows(InvalidCredentialsException.class, () -> open(fname, true, "WrongPassword"));
-        assertThat(ex2.getMessage()).isEqualTo("Incorrect password provided");
+        assertThatThrownBy(() -> open(fname, true, "WrongPassword")).isInstanceOf(InvalidCredentialsException.class).hasMessage("Incorrect password provided");
 
         try (Database db = open(fname, true, "password")) {
             db.getSystemTable("MSysQueries");

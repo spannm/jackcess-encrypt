@@ -13,9 +13,11 @@ import io.github.spannm.jackcess.impl.DatabaseImpl;
 import io.github.spannm.jackcess.test.AbstractBaseTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings({"checkstyle:MethodName", "PMD.LinguisticNaming"})
 final class CryptCodecProviderTest extends AbstractBaseTest {
 
     @ParameterizedTest(name = "[{index}] {0}")
@@ -127,6 +130,28 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
             db.getSystemTable("MSysQueries");
             doCheckOfficeDb(db, 0);
         }
+    }
+
+    // patches one byte of the RC4 CryptoAPI encryption info at 0x299: offset 2 = vMajor,
+    // 6 = flags (36 = CryptoAPI and AES), 30 = key size (also fails the non-standard fallback)
+    @ParameterizedTest(name = "[{index}] offset {0} = {1}")
+    @CsvSource({
+        "2,  9,  io.github.spannm.jackcess.impl.UnsupportedCodecException,              'vMajor 9, vMinor 2'",
+        "6,  0,  io.github.spannm.jackcess.impl.UnsupportedCodecException,              'vMajor 4, vMinor 2'",
+        "6,  36, io.github.spannm.jackcess.encrypt.InvalidCryptoConfigurationException, 'crypto algorithm must be one of [AES_128'",
+        "30, 41, io.github.spannm.jackcess.encrypt.InvalidCryptoConfigurationException, 'key size must be multiple of 8'"
+    })
+    void readOfficeEnc_invalidEncryptionInfo_rejected(int offset, int value, Class<? extends Exception> expected, String message) throws Exception {
+        File copy = createTempFile(getShortTestMethodName(), ".tmp", false);
+        Files.copy(new File("src/test/resources/data/db2007-oldenc.accdb").toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        try (RandomAccessFile raf = new RandomAccessFile(copy, "rw")) {
+            raf.seek(0x299 + offset);
+            raf.write(value);
+        }
+
+        assertThatThrownBy(() -> open(copy.getPath(), true, "Test123"))
+            .isInstanceOf(expected)
+            .hasMessageContaining(message);
     }
 
     @ParameterizedTest(name = "[{index}] {0}")

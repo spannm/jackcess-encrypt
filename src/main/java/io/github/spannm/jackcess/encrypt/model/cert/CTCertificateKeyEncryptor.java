@@ -25,16 +25,11 @@ package io.github.spannm.jackcess.encrypt.model.cert;
  * </pre>
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_CertificateKeyEncryptor")
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTCertificateKeyEncryptor {
 
-    // @XmlAttribute(required = true)
     protected byte[] encryptedKeyValue;
-    // @XmlAttribute(name = "X509Certificate", required = true)
     protected byte[] x509Certificate;
-    // @XmlAttribute(required = true)
     protected byte[] certVerifier;
 
     /**

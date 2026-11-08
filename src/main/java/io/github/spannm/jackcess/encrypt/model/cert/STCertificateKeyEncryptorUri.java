@@ -21,11 +21,8 @@ package io.github.spannm.jackcess.encrypt.model.cert;
  * </pre>
  *
  */
-// @XmlType(name = "ST_CertificateKeyEncryptorUri")
-// @XmlEnum
 public enum STCertificateKeyEncryptorUri {
 
-    // @XmlEnumValue("http://schemas.microsoft.com/office/2006/keyEncryptor/certificate")
     HTTP_SCHEMAS_MICROSOFT_COM_OFFICE_2006_KEY_ENCRYPTOR_CERTIFICATE("http://schemas.microsoft.com/office/2006/keyEncryptor/certificate");
 
     private final String value;

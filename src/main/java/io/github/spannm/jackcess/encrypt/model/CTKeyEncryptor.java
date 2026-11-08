@@ -29,18 +29,10 @@ import org.w3c.dom.Element;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_KeyEncryptor", propOrder = {
-// "any"
-// })
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTKeyEncryptor {
 
-    // @XmlAnyElement(lax = true)
     protected Object any;
-    // @XmlAttribute
-    // @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    // @XmlSchemaType(name = "token")
     protected String uri;
 
     /**

@@ -29,14 +29,9 @@ import java.util.List;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_KeyEncryptors", propOrder = {
-// "keyEncryptor"
-// })
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTKeyEncryptors {
 
-    // @XmlElement(required = true)
     protected List<CTKeyEncryptor> keyEncryptor;
 
     /**

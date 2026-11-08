@@ -21,11 +21,8 @@ package io.github.spannm.jackcess.encrypt.model.password;
  * </pre>
  *
  */
-// @XmlType(name = "ST_PasswordKeyEncryptorUri", namespace = "http://schemas.microsoft.com/office/2006/keyEncryptor/password")
-// @XmlEnum
 public enum STPasswordKeyEncryptorUri {
 
-    // @XmlEnumValue("http://schemas.microsoft.com/office/2006/keyEncryptor/password")
     HTTP_SCHEMAS_MICROSOFT_COM_OFFICE_2006_KEY_ENCRYPTOR_PASSWORD(
         "http://schemas.microsoft.com/office/2006/keyEncryptor/password");
 

@@ -28,19 +28,11 @@ package io.github.spannm.jackcess.encrypt.model;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_Encryption", propOrder = {
-// "keyData",
-// "dataIntegrity",
-// "keyEncryptors"
-// })
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTEncryption {
 
-    // @XmlElement(required = true)
     protected CTKeyData       keyData;
     protected CTDataIntegrity dataIntegrity;
-    // @XmlElement(required = true)
     protected CTKeyEncryptors keyEncryptors;
 
     /**

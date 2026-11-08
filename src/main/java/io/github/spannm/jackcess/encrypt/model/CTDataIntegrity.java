@@ -25,14 +25,10 @@ package io.github.spannm.jackcess.encrypt.model;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_DataIntegrity")
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTDataIntegrity {
 
-    // @XmlAttribute(required = true)
     protected byte[] encryptedHmacKey;
-    // @XmlAttribute(required = true)
     protected byte[] encryptedHmacValue;
 
     /**

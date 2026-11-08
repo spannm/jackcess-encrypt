@@ -31,26 +31,16 @@ package io.github.spannm.jackcess.encrypt.model;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_KeyData")
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTKeyData {
 
-    // @XmlAttribute(required = true)
     protected long   saltSize;
-    // @XmlAttribute(required = true)
     protected long   blockSize;
-    // @XmlAttribute(required = true)
     protected long   keyBits;
-    // @XmlAttribute(required = true)
     protected long   hashSize;
-    // @XmlAttribute(required = true)
     protected String cipherAlgorithm;
-    // @XmlAttribute(required = true)
     protected String cipherChaining;
-    // @XmlAttribute(required = true)
     protected String hashAlgorithm;
-    // @XmlAttribute(required = true)
     protected byte[] saltValue;
 
     /**

@@ -35,34 +35,20 @@ package io.github.spannm.jackcess.encrypt.model.password;
  *
  *
  */
-// @XmlAccessorType(XmlAccessType.FIELD)
-// @XmlType(name = "CT_PasswordKeyEncryptor", namespace = "http://schemas.microsoft.com/office/2006/keyEncryptor/password")
 @SuppressWarnings("PMD.VisibilityModifier")
 public class CTPasswordKeyEncryptor {
 
-    // @XmlAttribute(required = true)
     protected long   saltSize;
-    // @XmlAttribute(required = true)
     protected long   blockSize;
-    // @XmlAttribute(required = true)
     protected long   keyBits;
-    // @XmlAttribute(required = true)
     protected long   hashSize;
-    // @XmlAttribute(required = true)
     protected String cipherAlgorithm;
-    // @XmlAttribute(required = true)
     protected String cipherChaining;
-    // @XmlAttribute(required = true)
     protected String hashAlgorithm;
-    // @XmlAttribute(required = true)
     protected byte[] saltValue;
-    // @XmlAttribute(required = true)
     protected long   spinCount;
-    // @XmlAttribute(required = true)
     protected byte[] encryptedVerifierHashInput;
-    // @XmlAttribute(required = true)
     protected byte[] encryptedVerifierHashValue;
-    // @XmlAttribute(required = true)
     protected byte[] encryptedKeyValue;
 
     /**

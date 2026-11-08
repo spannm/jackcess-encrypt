@@ -132,7 +132,7 @@ public class MSISAMCryptCodecHandler extends BaseJetCryptCodecHandler {
     }
 
     private static byte[] createPasswordDigest(ByteBuffer _buffer, String _password, Charset _charset) {
-        Digest digest = (_buffer.get(ENCRYPTION_FLAGS_OFFSET) & USE_SHA1) != 0 ? new SHA1Digest() : new MD5Digest();
+        Digest digest = (_buffer.get(ENCRYPTION_FLAGS_OFFSET) & USE_SHA1) == 0 ? new MD5Digest() : new SHA1Digest();
 
         byte[] passwordBytes = new byte[PASSWORD_LENGTH];
 

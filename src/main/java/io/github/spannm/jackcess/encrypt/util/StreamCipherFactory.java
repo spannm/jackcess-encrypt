@@ -20,7 +20,7 @@ public abstract class StreamCipherFactory {
         try {
             // first, attempt to load a 1.51+ compatible factory instance
             factory = loadFactory("io.github.spannm.jackcess.encrypt.util.RC4EngineCompat$Factory");
-        } catch (Throwable ignored) {
+        } catch (Exception | LinkageError ignored) {
             // failed, try legacy version
         }
 
@@ -28,7 +28,7 @@ public abstract class StreamCipherFactory {
             try {
                 // now, attempt to load a 1.50 and earlier compatible factory instance
                 factory = loadFactory("io.github.spannm.jackcess.encrypt.util.RC4EngineLegacy$Factory");
-            } catch (Throwable _ex) {
+            } catch (Exception | LinkageError _ex) {
                 // sorry, no dice
                 throw new IllegalStateException("Incompatible bouncycastle version", _ex);
             }
@@ -52,12 +52,12 @@ public abstract class StreamCipherFactory {
         return RC4_ENGINE_FACTORY.newInstance();
     }
 
-    private static StreamCipherFactory loadFactory(String _className) throws Exception {
+    private static StreamCipherFactory loadFactory(String _className) throws ReflectiveOperationException {
         Class<?> factoryClass = Class.forName(_className);
         StreamCipherFactory factory = (StreamCipherFactory) factoryClass.getDeclaredConstructor().newInstance();
         // verify that the engine is functional
         if (factory.newInstance() == null) {
-            throw new IllegalStateException("EngineFactory " + _className + " not functional");
+            throw new IllegalStateException(String.format("EngineFactory %s not functional", _className));
         }
         return factory;
     }

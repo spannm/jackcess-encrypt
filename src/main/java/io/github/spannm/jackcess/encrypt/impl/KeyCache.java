@@ -29,13 +29,7 @@ public abstract class KeyCache<K> {
      * @return the key for the given page
      */
     public K get(int _pageNumber) {
-        Integer pageNumKey = _pageNumber;
-        K key = map.get(pageNumKey);
-        if (key == null) {
-            key = computeKey(_pageNumber);
-            map.put(pageNumKey, key);
-        }
-        return key;
+        return map.computeIfAbsent(_pageNumber, this::computeKey);
     }
 
     /**

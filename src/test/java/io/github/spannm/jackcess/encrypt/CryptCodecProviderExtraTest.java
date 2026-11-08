@@ -1,8 +1,6 @@
 package io.github.spannm.jackcess.encrypt;
 
 import static io.github.spannm.jackcess.test.TestUtil.createTempFile;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.spannm.jackcess.Database;
 import io.github.spannm.jackcess.DatabaseBuilder;

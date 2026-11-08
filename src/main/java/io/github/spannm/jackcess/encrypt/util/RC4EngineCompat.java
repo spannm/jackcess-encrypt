@@ -32,6 +32,7 @@ public class RC4EngineCompat extends RC4Engine implements StreamCipherCompat {
      * Creates a new, uninitialized RC4 engine.
      */
     public RC4EngineCompat() {
+        // nothing to initialize, the engine is set up by init()
     }
 
     /**

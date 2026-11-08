@@ -123,38 +123,11 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
 
         } else if (((vMajor == 2) || (vMajor == 3) || (vMajor == 4)) && (vMinor == 2)) {
 
-            // read flags (copy of the flags in EncryptionHeader)
-            int flags = encProvBuf.getInt();
-            if (EncryptionHeader.isFlagSet(flags, EncryptionHeader.FCRYPTO_API_FLAG)) {
-                if (EncryptionHeader.isFlagSet(flags, EncryptionHeader.FAES_FLAG)) {
-                    // OC: 2.3.4.5 - Standard Encryption: (3,4),2
-                    handler = new ECMAStandardEncryptionProvider(_channel, encodingKey, encProvBuf, pwdBytes);
-                } else {
-
-                    int initPos = encProvBuf.position();
-                    try {
-
-                        // OC: 2.3.5.1 - RC4 CryptoAPI Encryption: (2,3,4),2
-                        handler = new RC4CryptoAPIProvider(_channel, encodingKey, encProvBuf, pwdBytes);
-
-                    } catch (InvalidCryptoConfigurationException _ex) {
-
-                        // is this the "non-standard" encryption provider?
-                        try {
-                            // reset encryption info buf before attempting to re-process
-                            encProvBuf.position(initPos);
-                            handler = new NonStandardEncryptionProvider(_channel, encodingKey, encProvBuf, pwdBytes);
-                        } catch (Exception _ignored) {
-                            // ignore nested exception, continue with original
-                            throw _ex;
-                        }
-                    }
-                }
-            }
+            handler = createCryptoApiHandler(_channel, encodingKey, encProvBuf, pwdBytes);
         }
 
         if (handler == null) {
-            throw new UnsupportedCodecException("Unsupported office encryption provider: vMajor " + vMajor + ", vMinor " + vMinor);
+            throw new UnsupportedCodecException(String.format("Unsupported office encryption provider: vMajor %d, vMinor %d", vMajor, vMinor));
         }
 
         if (!handler.verifyPassword(pwdBytes)) {
@@ -165,6 +138,48 @@ public abstract class OfficeCryptCodecHandler extends BaseCryptCodecHandler {
         handler.phase = Phase.CRYPT;
 
         return handler;
+    }
+
+    /**
+     * Creates the handler for a CryptoAPI based encryption provider (version (2,3,4),2).
+     *
+     * @param _channel     the page channel of the database being opened
+     * @param _encodingKey the encoding key read from the database header
+     * @param _encProvBuf  the encryption info, positioned after the version
+     * @param _pwdBytes    the encoded password
+     * @return the handler, or {@code null} if the CryptoAPI flag is not set
+     * @throws IOException if the encryption info could not be read
+     */
+    private static OfficeCryptCodecHandler createCryptoApiHandler(PageChannel _channel, byte[] _encodingKey, ByteBuffer _encProvBuf, byte[] _pwdBytes) throws IOException {
+        // read flags (copy of the flags in EncryptionHeader)
+        int flags = _encProvBuf.getInt();
+        if (!EncryptionHeader.isFlagSet(flags, EncryptionHeader.FCRYPTO_API_FLAG)) {
+            return null;
+        }
+
+        if (EncryptionHeader.isFlagSet(flags, EncryptionHeader.FAES_FLAG)) {
+            // OC: 2.3.4.5 - Standard Encryption: (3,4),2
+            return new ECMAStandardEncryptionProvider(_channel, _encodingKey, _encProvBuf, _pwdBytes);
+        }
+
+        int initPos = _encProvBuf.position();
+        try {
+
+            // OC: 2.3.5.1 - RC4 CryptoAPI Encryption: (2,3,4),2
+            return new RC4CryptoAPIProvider(_channel, _encodingKey, _encProvBuf, _pwdBytes);
+
+        } catch (InvalidCryptoConfigurationException _ex) {
+
+            // is this the "non-standard" encryption provider?
+            try {
+                // reset encryption info buf before attempting to re-process
+                _encProvBuf.position(initPos);
+                return new NonStandardEncryptionProvider(_channel, _encodingKey, _encProvBuf, _pwdBytes);
+            } catch (Exception _ignored) {
+                // ignore nested exception, continue with original
+                throw _ex;
+            }
+        }
     }
 
     /**

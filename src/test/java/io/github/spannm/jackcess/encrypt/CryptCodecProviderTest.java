@@ -4,8 +4,6 @@ import static io.github.spannm.jackcess.test.TestUtil.assertTable;
 import static io.github.spannm.jackcess.test.TestUtil.createExpectedRow;
 import static io.github.spannm.jackcess.test.TestUtil.createExpectedTable;
 import static io.github.spannm.jackcess.test.TestUtil.createTempFile;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.spannm.jackcess.Database;
 import io.github.spannm.jackcess.DatabaseBuilder;
@@ -33,7 +31,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ValueSource(strings = {"src/test/resources/data/money2001.mny", "src/test/resources/data/money2001-pwd.mny"})
     void msisam2001(String dbFileName) throws Exception {
 
-        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+        assertThatThrownBy(builderWithoutCodec(dbFileName)::open)
             .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
@@ -72,7 +70,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db-enc.mdb"})
     void readJet2000(String dbFileName) throws Exception {
-        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+        assertThatThrownBy(builderWithoutCodec(dbFileName)::open)
             .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
@@ -85,7 +83,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db97-enc.mdb"})
     void readJet1997(String dbFileName) throws Exception {
-        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+        assertThatThrownBy(builderWithoutCodec(dbFileName)::open)
             .isInstanceOf(UnsupportedOperationException.class);
 
         try (Database db = open(dbFileName, true, null)) {
@@ -118,7 +116,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     @ParameterizedTest(name = "[{index}] {0}")
     @ValueSource(strings = {"src/test/resources/data/db2007-oldenc.accdb", "src/test/resources/data/db2007-enc.accdb"})
     void readOfficeEnc(String dbFileName) throws Exception {
-        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(dbFileName)).withReadOnly(true).open())
+        assertThatThrownBy(builderWithoutCodec(dbFileName)::open)
             .isInstanceOf(UnsupportedOperationException.class);
 
         assertThatThrownBy(() -> open(dbFileName, true, null)).isInstanceOf(IllegalStateException.class).hasMessage("Incorrect password provided");
@@ -176,7 +174,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
         Table t = db.getTable("Table1");
         assertThat(t).isNotNull();
 
-        assertThat(count.get()).isEqualTo(0);
+        assertThat(count.get()).isZero();
 
         CryptCodecProvider cryptCodecProvider = new CryptCodecProvider();
         cryptCodecProvider.setPasswordCallback(pc);
@@ -195,7 +193,7 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
     void nonStandardProvider() throws Exception {
         String fname = "src/test/resources/data/db-nonstandard.accdb";
 
-        assertThatThrownBy(() -> new DatabaseBuilder().withFile(new File(fname)).withReadOnly(true).open())
+        assertThatThrownBy(builderWithoutCodec(fname)::open)
             .isInstanceOf(UnsupportedOperationException.class);
 
         assertThatThrownBy(() -> open(fname, true, null)).isInstanceOf(InvalidCredentialsException.class).hasMessage("Incorrect password provided");
@@ -340,6 +338,11 @@ final class CryptCodecProviderTest extends AbstractBaseTest {
             .withFile(new File(_fileName))
             .withReadOnly(_readOnly),
             _pwd).open();
+    }
+
+    /** Returns a read-only builder for the given database without a codec provider. */
+    static DatabaseBuilder builderWithoutCodec(String _fileName) {
+        return new DatabaseBuilder().withFile(new File(_fileName)).withReadOnly(true);
     }
 
     static void checkCryptoStrength() {

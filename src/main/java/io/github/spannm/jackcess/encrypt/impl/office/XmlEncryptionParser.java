@@ -241,7 +241,7 @@ public final class XmlEncryptionParser {
         try {
             _factory.setAttribute(_propName, _propValue);
         } catch (IllegalArgumentException _ex) {
-            LOGGER.log(Level.WARNING, "Xml parser does not support property " + _propName);
+            LOGGER.log(Level.WARNING, "Xml parser does not support property {0}", _propName);
         }
     }
 

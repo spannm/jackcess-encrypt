@@ -24,7 +24,7 @@ public abstract class BlockCipherProvider extends OfficeCryptCodecHandler {
      * @param _channel the page channel of the database being read or written
      * @param _encodingKey the encoding key read from the database header
      */
-    public BlockCipherProvider(PageChannel _channel, byte[] _encodingKey) {
+    protected BlockCipherProvider(PageChannel _channel, byte[] _encodingKey) {
         super(_channel, _encodingKey);
     }
 

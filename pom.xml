@@ -470,6 +470,27 @@
                 <artifactId>cyclonedx-maven-plugin</artifactId>
             </plugin>
 
+            <plugin>
+                <!-- agent is prepared by basepom; add an XML report for the Sonar coverage import -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
     </build>
